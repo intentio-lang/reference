@@ -1,0 +1,50 @@
+% !TeX root = ./intentio-reference.tex
+
+\documentclass[12pt,a4paper,oneside]{book}
+
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{makeidx}
+\usepackage{url}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+
+\makeindex
+
+\author{Anna Bukowska, Marek Kaput}
+
+\title{The Intentio Language Reference}
+
+\begin{document}
+
+\frontmatter
+
+\maketitle
+
+\tableofcontents
+
+\include{chapters/preface}
+
+\mainmatter
+
+\part{The Intentio Language}
+\include{chapters/lang/introduction}
+
+\part{The Intentio Standard Library}
+\include{chapters/stdlib/introduction}
+
+\appendix
+
+\include{chapters/appendices/influences}
+
+\backmatter
+
+\bibliographystyle{abbrv}
+\bibliography{bibliography}
+
+\printindex
+
+\end{document}

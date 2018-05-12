@@ -1,0 +1,37 @@
+\chapter{Preface}
+
+We live in times of rapid emerging of new, modern programming languages. Some of them, like Rust\cite{TheRustProgrammingLanguage}, Go\cite{TheGoProgrammingLanguage} or Swift\cite{TheSwiftProgrammingLanguage}, have proved that programming language styles have not settled down and there is still room for new ideas, especially for merging existing paradigms. Fundamentally, one can observe a shift from imperative programming to functional programming.
+
+Despite all these changes, not all ideas get a chance to shine. Some of them are becoming forgotten and treated as esoteric. One of these is goal-oriented evaluation, with Icon\cite{TheIconProgrammingLanguage} being one of its most \emph{iconic} implementers. Authors of this document believe that Icon exposes some very interesting ideas and they made an attempt to recreate them in a new programming language: \emph{Intentio}, named after Latin for \emph{intention}.
+
+This document is the primary reference for the Intentio programming language. It consists of three parts:
+\begin{itemize}
+  \item Chapters that \emph{semi-formally}\footnote{This document tries to maintain reasonably formal description of all items, but there are no guarantees all cases are described. As a fallback, the \emph{intentioc}\cite{intentioc} compiler can be used as secondary reference.} describe each language construct and their use.
+  \item Chapters that \emph{semi-formally} describe runtime services and standard library that are core part of the language.
+  \item Various appendix chapters.
+\end{itemize}
+
+This document does not serve as a beginner-friendly introduction to the language.
+
+\section*{Goals}
+
+The primary goals when designing Intentio was for language to satisfy following constraints:
+\begin{enumerate}
+  \item It should feature core concepts of Icon language: goal-oriented evaluation and generators
+  \item It should support Unicode character set
+  \item It should be simple, source code should be easy to read and understand
+  \item It should be fast and easy to build prototype applications, the language should be \emph{ergonomic} from developer perspective \textbf{and} \emph{IDE friendly}
+  \item It should feature rich capabilities in processing textual data
+\end{enumerate}
+
+Our main goals were \textbf{not}:
+\begin{enumerate}
+  \item The language should be general purpose language
+  \item Compilation time should be short
+  \item Memory usage of Intentio programs should be low
+  \item It should be easy to integrate with other languages
+\end{enumerate}
+
+\section*{Acknowledges}
+
+The layout and parts of content of this document are inspired by two existing language specifications which we believe are good examples to follow: The Rust Reference\cite{TheRustReference} and Haskell 2010 Language Report\cite{Marlow_haskell2010}.
