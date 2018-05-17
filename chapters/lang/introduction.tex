@@ -6,15 +6,40 @@ This part defines the syntax of Intentio language and informal abstract semantic
 
 \section{Notation}
 
-% TODO:
+Throughout this document a BNF-based notational syntax is used to describe lexical structure and grammar:
+
+\[
+nonterminal ::= \texttt{term} | \texttt{another} \texttt{term}+
+nonterm2    ::= nonterminal*
+\]
+
+Following conventions are used for presenting productions syntax:
+
+\begin{center}
+  \begin{tabular}[t]{rl}
+    \((pattern)\)                & grouping \\
+    \([pattern]\)                & optional \\
+    \(pattern*\)                 & zero or more repetitions \\
+    \(pattern+\)                 & one or more repetitions \\
+    \(pattern_a | pattern_b\)    & choice \\
+    \(\texttt{token}\)           & terminal symbol (in fixed-width font)
+  \end{tabular}
+\end{center}
+
+\subsubsection{Unicode productions}
+
+A few productions in Intentio's grammar permit Unicode\cite{Unicode6} code points outside the ASCII range. These productions are defined in terms of character properties specified in the Unicode standard, rather than in terms of ASCII-range code points. Intentio compilers are expected to make use of new versions of Unicode as they are made available.
+
 
 \section{Program structure}
 
 % TODO:
 
+
 \section{Values and types}
 
 % TODO:
+
 
 \section{Namespaces}
 
