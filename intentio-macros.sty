@@ -1,0 +1,24 @@
+\ProvidesPackage{intentio-macros}[2018/05/18 v1.0 Intentio Reference Macros]
+
+\RequirePackage{amsmath}
+\RequirePackage{mathtools}
+
+\newenvironment{bnfutils}
+{
+  \newcommand{\eq}{& \rightarrow &}
+  \newcommand{\gor}{\hskip0.5em\relax | \hskip0.5em\relax}
+  \newcommand{\term}[1]{\texttt{##1}}
+}
+{}
+
+\newenvironment{bnf}
+{
+  \begin{bnfutils}
+    \begin{equation*}
+      \begin{matrix*}[l]
+}
+{
+      \end{matrix*}
+    \end{equation*}
+  \end{bnfutils}
+}

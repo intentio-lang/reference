@@ -7,11 +7,28 @@
 \usepackage{graphicx}
 \usepackage{geometry}
 \usepackage[utf8]{inputenc}
+\usepackage{listings}
 \usepackage{makeidx}
+\usepackage{mathtools}
 \usepackage{url}
+
+\usepackage{intentio-macros}
 
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1em}
+
+\lstdefinestyle{stdstyle}{
+  basicstyle=\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  keepspaces=true,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2
+}
+
+\lstset{style=stdstyle}
 
 \makeindex
 
@@ -34,6 +51,9 @@
 \part{The Intentio Language}
 \include{chapters/lang/introduction}
 \include{chapters/lang/lexical-structure}
+\include{chapters/lang/expressions}
+\include{chapters/lang/items}
+\include{chapters/lang/modules-assemblies}
 
 \part{The Intentio Standard Library}
 \include{chapters/stdlib/introduction}
@@ -44,9 +64,13 @@
 
 \backmatter
 
+\clearpage
+\addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{abbrv}
 \bibliography{bibliography}
 
+\clearpage
+\addcontentsline{toc}{chapter}{Index}
 \printindex
 
 \end{document}

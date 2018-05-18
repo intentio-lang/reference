@@ -4,56 +4,101 @@ Intentio is domain specific, imperative programming language oriented for proces
 
 This part defines the syntax of Intentio language and informal abstract semantics for the meaning of such programs. We leave as implementation detail how Intentio programs are manipulated, interpreted, compiled, etc. This includes all steps from source code to running program, programming environments and error messages. This also means that this document do not describe the reference compiler for Intentio language - \emph{intentioc}\cite{intentioc}.
 
-\section{Notation}
+
+\section{Notational Conventions}
+
+\subsection*{Grammar}
 
 Throughout this document a BNF-based notational syntax is used to describe lexical structure and grammar:
 
-\[
-nonterminal ::= \texttt{term} | \texttt{another} \texttt{term}+
-nonterm2    ::= nonterminal*
-\]
+\begin{bnf}
+  nonterminal  \eq \term{terminal} \gor \term{repeated}+ \\
+  nonterminal' \eq nonterminal*
+\end{bnf}
 
 Following conventions are used for presenting productions syntax:
 
+\begin{bnfutils}
 \begin{center}
-  \begin{tabular}[t]{rl}
-    \((pattern)\)                & grouping \\
-    \([pattern]\)                & optional \\
-    \(pattern*\)                 & zero or more repetitions \\
-    \(pattern+\)                 & one or more repetitions \\
-    \(pattern_a | pattern_b\)    & choice \\
-    \(\texttt{token}\)           & terminal symbol (in fixed-width font)
-  \end{tabular}
+\begin{tabular}[t]{ll}
+  \((pat)\)            & grouping \\
+  \([pat]\)            & optional \\
+  \(pat*\)             & zero or more repetitions \\
+  \(pat+\)             & one or more repetitions \\
+  \(pat_1 \gor pat_2\) & choice \\
+  \(\term{token}\)     & terminal symbol (in fixed-width font)
+\end{tabular}
 \end{center}
+\end{bnfutils}
 
-\subsubsection{Unicode productions}
+\subsubsection*{Unicode productions}
 
 A few productions in Intentio's grammar permit Unicode\cite{Unicode6} code points outside the ASCII range. These productions are defined in terms of character properties specified in the Unicode standard, rather than in terms of ASCII-range code points. Intentio compilers are expected to make use of new versions of Unicode as they are made available.
 
+\subsection*{Source code listings}
 
-\section{Phase distinction}
+Examples of Intentio program fragments are given in fixed-width font:
 
-Intentio's semantics obey a \emph{phase distinction} between compile-time and run-time\footnote{In interpreter environments, compile-time would consist of syntactic analysis and linting.}. Semantic rules that have a static interpretation govern the success or failure of compilation, while semantic rules that have a dynamic interpretation govern the behaviour of the program at run-time.
+\begin{lstlisting}
+  fun main():
+    x, y := 4, 3
+    writeln(f"sum = ${x + y}")
+\end{lstlisting}
+
+In some situations, there are \emph{placeholders} in program fragments representing arbitrary pieces of Intentio code are written in italics. By convention $e$ will mean expressions, $d$ - item declarations, $t$ - types, etc.:
+
+\begin{lstlisting}[mathescape=true]
+  if $e_1$ { $e_2$ } else { $e_3$ }
+\end{lstlisting}
+
+
+\section{Compile-time and Run-time}
+
+Intentio's semantics obey a \emph{phase distinction} between compile-time\index{compile-time} and run-time\index{run-time}\footnote{In interpreter environments, compile-time would consist of syntactic analysis and linting.}. Semantic rules that have a static interpretation govern the success or failure of compilation, while semantic rules that have a dynamic interpretation govern the behaviour of the program at run-time.
+
 
 \section{Program Structure}
 
-An Intentio program is structured syntactically and semantically into five abstract levels.
+An Intentio program is structured syntactically and semantically into five abstract levels:
 
 \begin{enumerate}
   \item At the topmost of each Intentio program or library is an \emph{assembly}. In compiled environments assembly is an unit of compilation, while in interpreted environments assembly is a whole set of loaded modules.
   \item At the topmost of each assembly is a set of \emph{modules}. Modules provide a way to control namespaces and to re-use software in larger programs. A particular source code file of Intentio program consists of one or more modules.
-  \item The top level of each module is a set of \emph{item declarations}. An item is a component of module.
+  \item The top level of each module is a set of \emph{item declarations}. An item is a component of module, such as a function, submodule or constant variable
+  \item Items which contain the real, executable code are built of \emph{expressions}. Expression denotes how to evaluate a \emph{term} and evaluating expression returns a \emph{result}.
+  \item At the bottom level is Intentio's \emph{lexical structure}. It describes how to build tokens - the most basic blocks of program's source code from sequences of characters in source file.
 \end{enumerate}
 
-This document proceeds bottom-up with respect to Intentio's syntactic structure.
 
-\section{Values, Types and Evaluation State}
+\section{Values, Types, Terms and Results}
 
-% TODO:
+A \emph{value}\index{value} is a representation of some entity which can be manipulated by a program. A \emph{type}\index{type} is a tag that defines the interpretation of value representation. Values and types are not mixed in Intentio. Values by itself are untyped, value type is required to perform any kind of operation on value. Values in Intentio are always in normal form.
+
+A \((value, type)\) pair is called a \emph{term}\index{term}. Terms represent data yielded from evaluating expressions. Intentio is \emph{strongly typed} so implicit type conversions do not exist in the language, but it is not prohibited to hide casts in callee (thus \lstinline{5 + 4.0} runs successfully).
+
+Evaluating expressions may either succeed or fail. A tagged union of successfully evaluated result or failure with information describing what failed is called a \emph{result}\index{result}. Terms and results are the basic blocks of representing information in Intentio.
+
+Following Haskell-style code listing describes relationships between these concepts:
+
+\begin{lstlisting}[language=Haskell]
+  data Value = ...
+  data Type = ...
+
+  newtype Term = (Value, Type)
+
+  data Result = Succ Term
+              | Fail Term
+\end{lstlisting}
 
 
 \section{Namespaces}
 
-% TODO:
+There are three distinct namespaces in Intentio:
 
-TODO MOVE TO CHAPTER ABOUT ITEMS AND ASSEMBLIES: Modules and items are entirely determined at compile-time, remain fixed during execution, and may reside in read-only memory. This limitation does not apply to assemblies, it is allowed to provide mechanisms to dynamically compile, load and unload modules at run-time.
+\begin{description}
+  \item [Item namespace\index{item namespace}] Consists item and variable names.
+  \item [Module namespace\index{module namespace}] Consists of module names and import renames.
+  \item [Type namespace\index{type namespace}] Consists of type names.
+\end{description}
+
+There are no constraints on names belonging to particular namespace, therefore it is possible for name \texttt{Int} to simultaneously denote an item/variable, module and type.
