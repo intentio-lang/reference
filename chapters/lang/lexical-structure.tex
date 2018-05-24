@@ -4,4 +4,25 @@ This chapter describes the lexical structure of Intentio. Most of the details ma
 
 In this chapter all whitespace is expressed explicitly in syntax descriptions, there is no implicit space between juxtaposed symbols. Terminal characters represent real characters in program source code.
 
+\section{Input format}
+
 Intentio program source is interpreted as a sequence of Unicode code points encoded in UTF-8, though most grammar rules are defined in terms of printable ASCII code points.
+
+Intentio is \emph{case sensitive} language and each code point is distinct; for instance, upper and lower case letters are different characters.
+
+The NUL character (U+0000) may be not allowed in whole program source text.
+
+If an UTF-8-encoded byte order mark (U+FEFF) is the first Unicode code point in program source text, it may be ignored. Byte order mark may be not allowed anywhere else in program source text.
+
+\section{Special Lexical Productions}
+
+Following productions define Unicode character sets which are used to define non pure ASCII productions. These productions do not have any semantical meaning themselves.
+
+\begin{bnfutils}
+\begin{itemize}
+  \item \(\term{XID\_start}\) and \(\term{XID\_continue}\) are sets of characters that have propertes \emph{XID\_start} and \emph{XID\_continue} as in Unicode Standard Annex \#31\cite{UAX31}, these productions define valid identifier characters
+  \item \(\term{non\_null}\) is any single Unicode character with all implementation-specific character restrictions applied
+  \item \(\term{non\_eol}\) is \(\term{non\_null}\) restricted to exclude \texttt{\textbackslash n} (U+000A)
+  \item \(\term{non\_double\_quote}\) is \(\term{non\_null}\) restricted to exclude \texttt{"} (U+0022)
+\end{itemize}
+\end{bnfutils}

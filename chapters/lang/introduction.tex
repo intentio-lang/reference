@@ -22,10 +22,11 @@ Following conventions are used for presenting productions syntax:
 \begin{center}
 \begin{tabular}[t]{ll}
   \((pat)\)            & grouping \\
-  \([pat]\)            & optional \\
-  \(pat*\)             & zero or more repetitions \\
-  \(pat+\)             & one or more repetitions \\
-  \(pat_1 \gor pat_2\) & choice \\
+  \([pat]\)            & optional (0 or 1 times) \\
+  \(pat*\)             & optional repetition (0 to \(n\) times) \\
+  \(pat+\)             & repetition (1 to \(n\) times) \\
+  \(pat_1 \ pat_2\)    & concatenation \\
+  \(pat_1 \gor pat_2\) & alternation \\
   \(\term{token}\)     & terminal symbol (in fixed-width font)
 \end{tabular}
 \end{center}
@@ -33,7 +34,7 @@ Following conventions are used for presenting productions syntax:
 
 \subsubsection*{Unicode productions}
 
-A few productions in Intentio's grammar permit Unicode\cite{Unicode6} code points outside the ASCII range. These productions are defined in terms of character properties specified in the Unicode standard, rather than in terms of ASCII-range code points. Intentio compilers are expected to make use of new versions of Unicode as they are made available.
+A few productions in Intentio's grammar permit Unicode\cite{Unicode} code points outside the ASCII range. These productions are defined in terms of character properties specified in the Unicode standard, rather than in terms of ASCII-range code points. Intentio compilers are expected to make use of new versions of Unicode as they are made available.
 
 \subsection*{Source code listings}
 
