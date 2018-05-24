@@ -26,3 +26,57 @@ Following productions define Unicode character sets which are used to define non
   \item \(\term{non\_double\_quote}\) is \(\term{non\_null}\) restricted to exclude \texttt{"} (U+0022)
 \end{itemize}
 \end{bnfutils}
+
+\section{Identifiers, Keywords and Operators}
+
+\begin{bnf}
+  ident \eq \gdiff{( \ \term{XID\_start} \ (\term{XID\_continue} \gor \term{'})* \ )}{keyword} \\
+  \\
+  keyword \eq
+             \term{abstract}
+      \gor   \term{and}
+      \gor   \term{break}
+      \gor   \term{case}
+      \gor   \term{const}
+      \gor   \term{continue}
+      \gorln \term{do}
+      \gor   \term{else}
+      \gor   \term{enum}
+      \gor   \term{fun}
+      \gor   \term{if}
+      \gor   \term{impl}
+      \gor   \term{import}
+      \gor   \term{in}
+      \gorln \term{is}
+      \gor   \term{loop}
+      \gor   \term{mod}
+      \gor   \term{not}
+      \gor   \term{or}
+      \gor   \term{return}
+      \gor   \term{struct}
+      \gor   \term{type}
+      \gorln \term{where}
+      \gor   \term{while}
+      \gor   \term{yield}
+      \gor   \term{\_} \\
+  \\
+  op \eq TODO
+\end{bnf}
+
+An \emph{identifier} consits of a "letter" or underscore followed by zero or more letters, digits, underscores, and single quotes. \emph{Keywords} are identifier-like tokens which have special meaning in the grammar, all of them are excluded from the \(ident\) rule.
+
+Implementations that offer lints or warnings for unused parameters/variables/items are encouraged to suppress such warnings for identifiers beginning with underscore. This allows programmers to use \texttt{\_arg} for a parameter that they expect to be unused.
+
+\section{Paths}
+
+\begin{bnf}
+  path \eq \term{:}? \ ( ident \ \term{:} )* \ ident
+\end{bnf}
+
+TODO
+
+\section{Comments}
+
+\section{Numeric Literals}
+
+\section{String Literals}
