@@ -7,3 +7,5 @@ stdlib
 linting
 submodule
 BNF
+ident
+eol

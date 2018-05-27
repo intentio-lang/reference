@@ -2,7 +2,7 @@
 
 This chapter describes the lexical structure of Intentio. Most of the details may be skipped in a first reading of the reference.
 
-In this chapter all whitespace is expressed explicitly in syntax descriptions, there is no implicit space between juxtaposed symbols. Terminal characters represent real characters in program source code.
+In this chapter all white space is expressed explicitly in syntax descriptions, there is no implicit space between juxtaposed symbols. Terminal characters represent real characters in program source code.
 
 \section{Input format}
 
@@ -16,21 +16,34 @@ If an UTF-8-encoded byte order mark (U+FEFF) is the first Unicode code point in 
 
 \section{Special Lexical Productions}
 
-Following productions define Unicode character sets which are used to define non pure ASCII productions. These productions do not have any semantical meaning themselves.
+Following productions define Unicode character sets which are used to define non pure ASCII productions. These productions do not have any semantic meaning themselves.
 
 \begin{bnfutils}
 \begin{itemize}
-  \item \(\term{XID\_start}\) and \(\term{XID\_continue}\) are sets of characters that have propertes \emph{XID\_start} and \emph{XID\_continue} as in Unicode Standard Annex \#31\cite{UAX31}, these productions define valid identifier characters
-  \item \(\term{non\_null}\) is any single Unicode character with all implementation-specific character restrictions applied
-  \item \(\term{non\_eol}\) is \(\term{non\_null}\) restricted to exclude \texttt{\textbackslash n} (U+000A)
-  \item \(\term{non\_double\_quote}\) is \(\term{non\_null}\) restricted to exclude \texttt{"} (U+0022)
+  \item \(xidstart\) and \(xidcont\) are sets of characters that have properties \emph{XID\_start} and \emph{XID\_continue} as in Unicode Standard Annex \#31\cite{UAX31}, these productions define valid identifier characters
+  \item \(any\) is any single Unicode character with all implementation-specific character restrictions applied
+  \item \(eol\) matches either line feed character \texttt{\textbackslash n} (U+000A, Unix-style newline marker) or carriage return and then line feed characters \texttt{\textbackslash r\textbackslash n} (U+000D U+000A, Windows-style newline marker)
 \end{itemize}
 \end{bnfutils}
+
+Additionally:
+
+\begin{bnf}
+  noneol \eq \gdiff{any}{eol} \\
+  \\
+  decdig \eq 0 \gor 1 \gor ... \gor 9 \\
+  bindig \eq 0 \gor 1 \\
+  octdig \eq 0 \gor 1 \gor ... \gor 7 \\
+  hexdig \eq  0 \gor 1 \gor ... \gor 9
+         \gor A \gor B \gor ... \gor F
+         \gor a \gor b \gor ... \gor f
+\end{bnf}
 
 \section{Identifiers, Keywords and Operators}
 
 \begin{bnf}
-  ident \eq \gdiff{( \ \term{XID\_start} \ (\term{XID\_continue} \gor \term{'})* \ )}{keyword} \\
+  id \eq \gdiff{( \ xidstart \ \gmany{xidcont \gor \term{'}} \ )}{keyword} \\
+  qid \eq \gtry{id \ \term{:}} \ id \\
   \\
   keyword \eq
              \term{abstract}
@@ -42,41 +55,179 @@ Following productions define Unicode character sets which are used to define non
       \gorln \term{do}
       \gor   \term{else}
       \gor   \term{enum}
+      \gor   \term{fail}
       \gor   \term{fun}
       \gor   \term{if}
       \gor   \term{impl}
       \gor   \term{import}
-      \gor   \term{in}
-      \gorln \term{is}
+      \gorln \term{in}
+      \gor   \term{is}
       \gor   \term{loop}
       \gor   \term{mod}
       \gor   \term{not}
       \gor   \term{or}
       \gor   \term{return}
       \gor   \term{struct}
-      \gor   \term{type}
-      \gorln \term{where}
+      \gorln \term{type}
+      \gor   \term{where}
       \gor   \term{while}
       \gor   \term{yield}
       \gor   \term{\_} \\
   \\
-  op \eq TODO
+  operator \eq
+           \term{+}
+    \gor   \term{-}
+    \gor   \term{*}
+    \gor   \term{/}
+    \gorln \term{(}
+    \gor   \term{)}
+    \gor   \term{[}
+    \gor   \term{]}
+    \gor   \term{\{}
+    \gor   \term{\}}
+    \gor   \term{:}
+    \gorln \term{==}
+    \gor   \term{<}
+    \gor   \term{<=}
+    \gor   \term{>}
+    \gor   \term{>=}
+    \gorln \term{:=}
+    \gor   \term{<-}
+    \gor   \term{\$}
+    \gor   \term{\%}
 \end{bnf}
 
-An \emph{identifier} consits of a "letter" or underscore followed by zero or more letters, digits, underscores, and single quotes. \emph{Keywords} are identifier-like tokens which have special meaning in the grammar, all of them are excluded from the \(ident\) rule.
+An \emph{identifier}\index{identifier} consists of a "letter" or underscore followed by zero or more letters, digits, underscores, and single quotes. Simple, unqualified identifiers (\(id\)) are always resolved within current module and scope. In order to be able to specify which module identifier belongs to, in most places identifier may be prefixed with module name and "\texttt{:}" character to form a \emph{qualified identifier}\index{qualified identifier} (\(qid\)).
+
+\emph{Keywords}\index{keyword} are identifier-like tokens which have special meaning in the grammar, all of them are excluded from the \(ident\) rule. \emph{Operators}\index{operator} are another special tokens, these ones are formed from symbol characters. \(keyword\) and \(operator\) productions have no use in Intentio grammar definition, instead particular tokens are used.
 
 Implementations that offer lints or warnings for unused parameters/variables/items are encouraged to suppress such warnings for identifiers beginning with underscore. This allows programmers to use \texttt{\_arg} for a parameter that they expect to be unused.
 
-\section{Paths}
+\section{Comments}
 
 \begin{bnf}
-  path \eq \term{:}? \ ( ident \ \term{:} )* \ ident
+  comment \eq \# \ \gmany{noneol} \ eol
 \end{bnf}
 
-TODO
-
-\section{Comments}
+\emph{Comments}\index{comment} are valid white space. Comments in Intentio are only line-based, there is no concept of block comment.
 
 \section{Numeric Literals}
 
+\begin{bnf}
+  decimal     \eq decdig \ \gmany{ \ decdig \gor \term{\_} \ } \\
+  binary      \eq (\term{0b} \gor \term{0B}) \ bindig \ \gmany{ \ bindig \gor \term{\_} \ } \\
+  octal       \eq (\term{0o} \gor \term{0O}) \ octdig \ \gmany{ \ octdig \gor \term{\_} \ } \\
+  hexadecimal \eq (\term{0x} \gor \term{0X}) \ hexdig \ \gmany{ \ hexdig \gor \term{\_} \ } \\
+  \\
+  integer \eq binary \gor octal \gor decimal \gor hexadecimal \\
+\end{bnf}
+
+\begin{bnf}
+  exponent \eq ( \term{e} \gor \term{E} ) \ \gtry{ \term{+} \gor \term{-} } \ \gmany{\term{\_}} \ decimal \\
+  \\
+  float \eq    decimal \ \term{.} \ decimal \ \gtry{exponent}
+        \gorln decimal \ exponent
+\end{bnf}
+
+A \emph{numeric literal}\index{numeric literal} is either an \emph{integer literal}\index{integer literal} or \emph{floating-point   literal}\index{floating-point literal}. Integer literals may be given in decimal (the default), binary (prefixed by \texttt{0b} or \texttt{0B}), octal (prefixed by \texttt{0o} or \texttt{0O}) or hexadecimal notation (prefixed by \texttt{0x} or \texttt{0X}). Floating-point literals are always decimal. A floating literal must contain digits both before and after the decimal point. A "\texttt{\_}" character is allowed inside numeric literals for visual separation of digit groups, for instance \lstinline{476_981__109_528_} is equal to \lstinline{476981109528}. Negative numeric literals are described grammatically, not lexically.
+
 \section{String Literals}
+
+\begin{bnf}
+  string \eq \gtry{stringmod} \ ( \ string' \gor charstring \gor rawstring \gor regexstring \ )
+\end{bnf}
+
+Intentio features very flexible string literals syntax. String literals can be written in four forms (regular, character, raw and regular expression) that make the literal compile to one of three value types (\lstinline{String}, \lstinline{Char} or \lstinline{Regex}). String literals can be also prefixed with few modifiers that alter literal value before compiling it to value.
+
+\subsection*{Regular String Literals}
+
+\begin{bnf}
+  string' \eq \term{"} \ \gmany{ \ \gdiff{any}{\ \term{"} \gor \term{\textbackslash} \ } \gor escseq \ } \ \term{"}
+\end{bnf}
+
+A \emph{string literal}\index{string literal} is a sequence of Unicode characters, typed either directly or via escape sequence. String literals are compiled to \lstinline{String} terms.
+
+\subsection*{Character Literals}
+
+\begin{bnf}
+  charstring \eq \term{c"} \ ( \ \gdiff{any}{\ \term{'} \gor \term{\textbackslash} \ } \gor escseq \ ) \ \term{"}
+\end{bnf}
+
+A \emph{character literal}\index{character literal} is a single Unicode character string, typed either directly or via escape sequence. Character literals are compiled to \lstinline{Char} terms. The implementation is required to verify that character literal makes only one character.
+
+\subsection*{Raw String Literals}
+
+\begin{bnf}
+  rawstring      \eq \term{r} \ rawstring'(0) \\
+  rawstring'(n)  \eq    \term{"} \ rawstring''(n) \ \term{"}
+                 \gorln \term{\#} \ rawstring'(n+1) \ \term{\#} \\
+  rawstring''(n) \eq \textnormal{An \(\gmany{any}\) that does not contain} \\
+                 & & \textnormal{\term{"} followed by \term{\#} repeated \(n\) times.}
+\end{bnf}
+
+A \emph{raw string literal}\index{raw string literal} does not process any escape sequences. It starts with letter \texttt{r}, followed by zero or more repetitions of hash symbol (\texttt{\#}) and double quote (\texttt{"}). The raw string body can contain any sequence of Unicode characters and is terminated only by another double quote (\texttt{"}) followed by the same number of hashes (\texttt{\#}) that proceeded the opening quote.
+
+Examples of raw string literals:
+
+\begin{lstlisting}
+"foo"      == r"foo"            # foo
+"\"foo\""  == r#""foo""#        # "foo"
+"x #\"# y" == r##"x #"# y"##    # x #"# y
+\end{lstlisting}
+
+\subsection*{Regular Expression Literals}
+
+\begin{bnf}
+  regexstring \eq \term{x} \ ( \ string' \gor rawstring \ )
+\end{bnf}
+
+A \emph{regular expression literal}\index{regular expression literal} is a string literal that represents a regular expression and is compiled to \lstinline{Regex} term. The exact syntactic and semantic details of regular expressions in Intentio are implementation dependent.
+
+\subsection*{Modifiers}
+
+\begin{bnf}
+  stringmod \eq \term{t} \gor \term{u}
+\end{bnf}
+
+A \emph{string literal modifier}\index{string literal modifier} is a special flag that, when enabled, adds a step of processing of the literal value before compiling it to Intentio term. The order of modifiers is respected, they are processed from left-most modifier to right-most one.
+
+Because modifiers alter literal contents before its compiling, they can fundamentally change their meaning, for instance the literal \lstinline{tc"   x   "} should successfully compile and evaluate to single character "\texttt{x}".
+
+Intentio provides following modifiers:
+
+\begin{itemize}
+  \item \texttt{t} - \emph{trim}: The trim modifier removes all white space characters from both sides of the string literal value.
+  \item \texttt{u} - \emph{unindent}: The unindent modifier gets the white-space-only prefix of the string literal value and then removes it from each line of the value.
+\end{itemize}
+
+\subsection*{Escape Sequences}
+
+\begin{bnf}
+  charescseq \eq \term{\textbackslash '} \gor \term{\textbackslash "} \gor \term{\textbackslash n} \gor \term{\textbackslash r} \gor \term{\textbackslash t} \gor \term{\textbackslash \textbackslash} \gor \term{\textbackslash 0} \\
+  asciiescseq \eq \term{\textbackslash x} \ hexdig \ hexdig \\
+  unicodeescseq \eq \term{\textbackslash u\{} \ \gmanya{ \ hexdig \gor \term{\_} \ } \ \term{\}} \\
+  \\
+  escseq \eq charescseq \gor asciiescseq \gor unicodeescseq
+\end{bnf}
+
+Some \emph{escape sequences}\index{escape sequence} are available in non-raw string literals. An escape starts with a backslash character (\texttt{\textbackslash}) and continues with one of the following forms:
+
+\begin{itemize}
+  \item An \emph{8-bit code point escape sequence} starts with letter \texttt{x} and is followed by exactly two hex digits with value up to \(0x7f\). It denotes an ASCII character with value equal to provided hex value. Higher values are not permitted because it is ambiguous whether they mean Unicode code points or byte values, though the implementation should accept them on lexical level for better user experience.
+  \item A \emph{24-bit code point escape sequence} starts with letter \texttt{u} and is followed by up to six hex digits surrounded by braces "\texttt{\{}" and "\texttt{\}}". It denotes the Unicode code point equal to the provided hex value. The implementation should accept more digits on lexical level for better user experience.
+  \item The \emph{character escape sequences} are convenience shortcuts for 8-bit code point escape sequences. Following table describes exact translations:
+
+    \begin{center}
+    \begin{tabular}{c|c|c}
+      Escape & Character & Unicode \\
+      \hline
+      \texttt{\textbackslash '} & \texttt{'} & U+0027 \\
+      \texttt{\textbackslash "} & \texttt{"} & U+0022 \\
+      \texttt{\textbackslash n} & \texttt{\textbackslash n} & U+000A \\
+      \texttt{\textbackslash r} & \texttt{\textbackslash r} & U+000D \\
+      \texttt{\textbackslash t} & \texttt{\textbackslash t} & U+0009 \\
+      \texttt{\textbackslash \textbackslash} & \texttt{\textbackslash} & U+005C \\
+      \texttt{\textbackslash 0} & NUL & U+0000 \\
+    \end{tabular}
+    \end{center}
+\end{itemize}
