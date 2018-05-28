@@ -99,7 +99,7 @@ Additionally:
 
 An \emph{identifier}\index{identifier} consists of a "letter" or underscore followed by zero or more letters, digits, underscores, and single quotes. Simple, unqualified identifiers (\(id\)) are always resolved within current module and scope. In order to be able to specify which module identifier belongs to, in most places identifier may be prefixed with module name and "\texttt{:}" character to form a \emph{qualified identifier}\index{qualified identifier} (\(qid\)).
 
-\emph{Keywords}\index{keyword} are identifier-like tokens which have special meaning in the grammar, all of them are excluded from the \(ident\) rule. \emph{Operators}\index{operator} are another special tokens, these ones are formed from symbol characters. \(keyword\) and \(operator\) productions have no use in Intentio grammar definition, instead particular tokens are used.
+\emph{Keywords}\index{keyword} are identifier-like tokens which have special meaning in the grammar, all of them are excluded from the \(id\) rule. \emph{Operators}\index{operator} are another special tokens, these ones are formed from symbol characters. \(keyword\) and \(operator\) productions have no use in Intentio grammar definition, instead particular tokens are used.
 
 Implementations that offer lints or warnings for unused parameters/variables/items are encouraged to suppress such warnings for identifiers beginning with underscore. This allows programmers to use \texttt{\_arg} for a parameter that they expect to be unused.
 
