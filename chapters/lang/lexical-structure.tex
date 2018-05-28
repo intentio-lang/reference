@@ -42,7 +42,7 @@ Additionally:
 \section{Identifiers, Keywords and Operators}
 
 \begin{bnf}
-  \gd{id}  \eq \gdiff{( \ \gp{xidstart} \ \gmany{\gp{xidcont} \gor \term{'}} \ )}{keyword} \\
+  \gd{id}  \eq \gdiff{( \ \gp{xidstart} \ \gmany{\gp{xidcont} \gor \term{'}} \ )}{\gp{keyword}} \\
   \gd{qid} \eq \gtry{\gp{id} \ \term{:}} \ \gp{id} \\
   \\
   \gd{keyword} \eq
@@ -111,7 +111,13 @@ Implementations that offer lints or warnings for unused parameters/variables/ite
 
 \emph{Comments}\index{comment} are valid white space. Comments in Intentio are only line-based, there is no concept of block comment.
 
-\section{Numeric Literals}
+\section{Literals}
+
+\begin{bnf}
+  \gd{literal} \eq \gp{integer} \gor \gp{float} \gor \gp{string}
+\end{bnf}
+
+\subsection{Numeric Literals}
 
 \begin{bnf}
   \gd{decimal}     \eq \gp{decdig} \ \gmany{ \ \gp{decdig} \gor \term{\_} \ } \\
@@ -131,7 +137,7 @@ Implementations that offer lints or warnings for unused parameters/variables/ite
 
 A \emph{numeric literal}\index{numeric literal} is either an \emph{integer literal}\index{integer literal} or \emph{floating-point   literal}\index{floating-point literal}. Integer literals may be given in decimal (the default), binary (prefixed by \texttt{0b} or \texttt{0B}), octal (prefixed by \texttt{0o} or \texttt{0O}) or hexadecimal notation (prefixed by \texttt{0x} or \texttt{0X}). Floating-point literals are always decimal. A floating literal must contain digits both before and after the decimal point. A "\texttt{\_}" character is allowed inside numeric literals for visual separation of digit groups, for instance \lstinline{476_981__109_528_} is equal to \lstinline{476981109528}. Negative numeric literals are described grammatically, not lexically.
 
-\section{String Literals}
+\subsection{String Literals}
 
 \begin{bnf}
   \gd{string} \eq \gtry{\gp{stringmod}} \ ( \ \gp{string'} \gor \gp{charstring} \gor \gp{rawstring} \gor \gp{regexstring} \ )
@@ -139,7 +145,7 @@ A \emph{numeric literal}\index{numeric literal} is either an \emph{integer liter
 
 Intentio features very flexible string literals syntax. String literals can be written in four forms (regular, character, raw and regular expression) that make the literal compile to one of three value types (\lstinline{String}, \lstinline{Char} or \lstinline{Regex}). String literals can be also prefixed with few modifiers that alter literal value before compiling it to value.
 
-\subsection*{Regular String Literals}
+\subsubsection*{Regular String Literals}
 
 \begin{bnf}
   \gd{string'} \eq \term{"} \ \gmany{ \ \gdiff{\gp{any}}{\ \term{"} \gor \term{\textbackslash} \ } \gor \gp{escseq} \ } \ \term{"}
@@ -147,7 +153,7 @@ Intentio features very flexible string literals syntax. String literals can be w
 
 A \emph{string literal}\index{string literal} is a sequence of Unicode characters, typed either directly or via escape sequence. String literals are compiled to \lstinline{String} terms.
 
-\subsection*{Character Literals}
+\subsubsection*{Character Literals}
 
 \begin{bnf}
   \gd{charstring} \eq \term{c"} \ ( \ \gdiff{\gp{any}}{\ \term{'} \gor \term{\textbackslash} \ } \gor \gp{escseq} \ ) \ \term{"}
@@ -155,7 +161,7 @@ A \emph{string literal}\index{string literal} is a sequence of Unicode character
 
 A \emph{character literal}\index{character literal} is a single Unicode character string, typed either directly or via escape sequence. Character literals are compiled to \lstinline{Char} terms. The implementation is required to verify that character literal makes only one character.
 
-\subsection*{Raw String Literals}
+\subsubsection*{Raw String Literals}
 
 \begin{bnf}
   \gd{rawstring}      \eq \term{r} \ \gp{rawstring'}(0) \\
@@ -175,7 +181,7 @@ Examples of raw string literals:
 "x #\"# y" == r##"x #"# y"##    # x #"# y
 \end{lstlisting}
 
-\subsection*{Regular Expression Literals}
+\subsubsection*{Regular Expression Literals}
 
 \begin{bnf}
   \gd{regexstring} \eq \term{x} \ ( \ \gp{string'} \gor \gp{rawstring} \ )
@@ -183,7 +189,7 @@ Examples of raw string literals:
 
 A \emph{regular expression literal}\index{regular expression literal} is a string literal that represents a regular expression and is compiled to \lstinline{Regex} term. The exact syntactic and semantic details of regular expressions in Intentio are implementation dependent.
 
-\subsection*{Modifiers}
+\subsubsection*{Modifiers}
 
 \begin{bnf}
   \gd{stringmod} \eq \term{t} \gor \term{u}
@@ -200,7 +206,7 @@ Intentio provides following modifiers:
   \item \texttt{u} - \emph{unindent}: The unindent modifier gets the white-space-only prefix of the string literal value and then removes it from each line of the value.
 \end{itemize}
 
-\subsection*{Escape Sequences}
+\subsubsection*{Escape Sequences}
 
 \begin{bnf}
   \gd{charescseq} \eq \term{\textbackslash '} \gor \term{\textbackslash "} \gor \term{\textbackslash n} \gor \term{\textbackslash r} \gor \term{\textbackslash t} \gor \term{\textbackslash \textbackslash} \gor \term{\textbackslash 0} \\

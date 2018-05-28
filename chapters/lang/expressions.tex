@@ -11,3 +11,16 @@ An \emph{expression}\index{expression} is an syntactic construct that \emph{eval
   \item The order in which to evaluate the sub-expressions
   \item How to combine the sub-expressions' results to obtain the result of the expression
 \end{itemize}
+
+\begin{bnf}
+  \gd{expr} \eq    \term{\gp{ident}}                   \gcomm{variable or item}
+            \gorln \term{\gp{literal}}
+            \gorln blockexpr                           \gcomm{block expression}
+            \gorln unopexpr                            \gcomm{unary operator expression}
+            \gorln binopexpr                           \gcomm{binary operator expression}
+            \gorln \term{(} \ \gp{expr} \ \term{)}     \gcomm{parenthesized expression}
+            \gorln callexpr                            \gcomm{function call}
+            \gorln loopexpr                            \gcomm{loops}
+            \gorln ifexpr                              \gcomm{conditionals}
+            \gorln returnexpr                          \gcomm{return expression}
+\end{bnf}
