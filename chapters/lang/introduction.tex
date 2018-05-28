@@ -9,11 +9,10 @@ This part defines the syntax of Intentio language and informal abstract semantic
 
 \subsection*{Grammar}
 
-Throughout this document a BNF-based notational syntax is used to describe lexical structure and grammar:
+Throughout this document a BNF-style notational syntax is used to describe lexical structure and grammar:
 
 \begin{bnf}
-  nonterminal  \eq \term{terminal} \gor \gmanya{\term{repeated}} \\
-  nonterminal' \eq \gmany{nonterminal}
+  nonterminal \eq \term{terminal} \gor alternative
 \end{bnf}
 
 Following conventions are used for presenting productions syntax:
@@ -35,6 +34,12 @@ Following conventions are used for presenting productions syntax:
 \end{center}
 \end{bnfutils}
 
+\subsubsection*{Parameterized productions}
+
+Some productions in Intentio's grammar (like raw string literals) cannot be expressed using context-free grammar with finite number of productions. In order to reduce need of falling back to natural language, a concept of \emph{parameterized productions} is used throughout this document.
+
+A production \(A(x_1, x_2, ..., x_n) \rightarrow B\), parameterized over arguments \(x_1, x_2, ..., x_n\), defines different production for each combination of its arguments.
+
 \subsubsection*{Unicode productions}
 
 A few productions in Intentio's grammar permit Unicode\cite{Unicode} code points outside the ASCII range. These productions are defined in terms of character properties specified in the Unicode standard, rather than in terms of ASCII-range code points. Intentio compilers are expected to make use of new versions of Unicode as they are made available.
@@ -44,9 +49,10 @@ A few productions in Intentio's grammar permit Unicode\cite{Unicode} code points
 Examples of Intentio program fragments are given in fixed-width font:
 
 \begin{lstlisting}
-  fun main():
-    x, y := 4, 3
-    writeln(f"sum = ${x + y}")
+  fun main() {
+    x, y := 4, 3;
+    writeln(f"sum = ${x + y}");
+  }
 \end{lstlisting}
 
 In some situations, there are \emph{placeholders} in program fragments representing arbitrary pieces of Intentio code are written in italics. By convention $e$ will mean expressions, $d$ - item declarations, $t$ - types, etc.:
