@@ -4,16 +4,8 @@ This chapter describes syntax and semantics of Intentio \emph{expressions}. Inte
 
 Intentio does not have a concept of \emph{statement} known from other programming languages.
 
-An \emph{expression}\index{expression} is an syntactic construct that \emph{evaluates} to a term. It may either \emph{succeed} or \emph{fail} resulting in a result. During the evaluation, expression may perform \emph{side effects}, for example it can mutate some state or perform execution jump. The meaning of each kind of expression dictates several things:
-
-\begin{itemize}
-  \item Whether or not to evaluate the sub-expressions when evaluating the expression
-  \item The order in which to evaluate the sub-expressions
-  \item How to combine the sub-expressions' results to obtain the result of the expression
-\end{itemize}
-
 \begin{bnf}
-  \gd{expr} \eq    \term{\gp{qid}}                   \gcomm{variable or item}
+  \gd{expr} \eq    \term{\gp{qid}}                     \gcomm{variable or item}
             \gorln \term{\gp{literal}}
             \gorln blockexpr                           \gcomm{block expression}
             \gorln unopexpr                            \gcomm{unary operator expression}
@@ -24,3 +16,11 @@ An \emph{expression}\index{expression} is an syntactic construct that \emph{eval
             \gorln ifexpr                              \gcomm{conditionals}
             \gorln returnexpr                          \gcomm{return expression}
 \end{bnf}
+
+An \emph{expression}\index{expression} is an syntactic construct that \emph{evaluates} to a term. It may either \emph{succeed} or \emph{fail} resulting in a result. During the evaluation, expression may perform \emph{side effects}, for example it can mutate some state or perform execution jump. The meaning of each kind of expression dictates several things:
+
+\begin{itemize}
+  \item Whether or not to evaluate the sub-expressions when evaluating the expression
+  \item The order in which to evaluate the sub-expressions
+  \item How to combine the sub-expressions' results to obtain the result of the expression
+\end{itemize}
