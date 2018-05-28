@@ -20,81 +20,81 @@ Following productions define Unicode character sets which are used to define non
 
 \begin{bnfutils}
 \begin{itemize}
-  \item \(xidstart\) and \(xidcont\) are sets of characters that have properties \emph{XID\_start} and \emph{XID\_continue} as in Unicode Standard Annex \#31\cite{UAX31}, these productions define valid identifier characters
-  \item \(any\) is any single Unicode character with all implementation-specific character restrictions applied
-  \item \(eol\) matches either line feed character \texttt{\textbackslash n} (U+000A, Unix-style newline marker) or carriage return and then line feed characters \texttt{\textbackslash r\textbackslash n} (U+000D U+000A, Windows-style newline marker)
+  \item \(\gd{xidstart}\) and \(\gd{xidcont}\) are sets of characters that have properties \emph{XID\_start} and \emph{XID\_continue} as in Unicode Standard Annex \#31\cite{UAX31}, these productions define valid identifier characters
+  \item \(\gd{any}\) is any single Unicode character with all implementation-specific character restrictions applied
+  \item \(\gd{eol}\) matches either line feed character \texttt{\textbackslash n} (U+000A, Unix-style newline marker) or carriage return and then line feed characters \texttt{\textbackslash r\textbackslash n} (U+000D U+000A, Windows-style newline marker)
 \end{itemize}
 \end{bnfutils}
 
 Additionally:
 
 \begin{bnf}
-  noneol \eq \gdiff{any}{eol} \\
+  \gd{noneol} \eq \gdiff{\gp{any}}{\gp{eol}} \\
   \\
-  decdig \eq 0 \gor 1 \gor ... \gor 9 \\
-  bindig \eq 0 \gor 1 \\
-  octdig \eq 0 \gor 1 \gor ... \gor 7 \\
-  hexdig \eq  0 \gor 1 \gor ... \gor 9
-         \gor A \gor B \gor ... \gor F
-         \gor a \gor b \gor ... \gor f
+  \gd{decdig} \eq 0 \gor 1 \gor ... \gor 9 \\
+  \gd{bindig} \eq 0 \gor 1 \\
+  \gd{octdig} \eq 0 \gor 1 \gor ... \gor 7 \\
+  \gd{hexdig} \eq  0 \gor 1 \gor ... \gor 9
+              \gor A \gor B \gor ... \gor F
+              \gor a \gor b \gor ... \gor f
 \end{bnf}
 
 \section{Identifiers, Keywords and Operators}
 
 \begin{bnf}
-  id \eq \gdiff{( \ xidstart \ \gmany{xidcont \gor \term{'}} \ )}{keyword} \\
-  qid \eq \gtry{id \ \term{:}} \ id \\
+  \gd{id}  \eq \gdiff{( \ \gp{xidstart} \ \gmany{\gp{xidcont} \gor \term{'}} \ )}{keyword} \\
+  \gd{qid} \eq \gtry{\gp{id} \ \term{:}} \ \gp{id} \\
   \\
-  keyword \eq
-             \term{abstract}
-      \gor   \term{and}
-      \gor   \term{break}
-      \gor   \term{case}
-      \gor   \term{const}
-      \gor   \term{continue}
-      \gorln \term{do}
-      \gor   \term{else}
-      \gor   \term{enum}
-      \gor   \term{fail}
-      \gor   \term{fun}
-      \gor   \term{if}
-      \gor   \term{impl}
-      \gor   \term{import}
-      \gorln \term{in}
-      \gor   \term{is}
-      \gor   \term{loop}
-      \gor   \term{mod}
-      \gor   \term{not}
-      \gor   \term{or}
-      \gor   \term{return}
-      \gor   \term{struct}
-      \gorln \term{type}
-      \gor   \term{where}
-      \gor   \term{while}
-      \gor   \term{yield}
-      \gor   \term{\_} \\
+  \gd{keyword} \eq
+               \term{abstract}
+        \gor   \term{and}
+        \gor   \term{break}
+        \gor   \term{case}
+        \gor   \term{const}
+        \gor   \term{continue}
+        \gorln \term{do}
+        \gor   \term{else}
+        \gor   \term{enum}
+        \gor   \term{fail}
+        \gor   \term{fun}
+        \gor   \term{if}
+        \gor   \term{impl}
+        \gor   \term{import}
+        \gorln \term{in}
+        \gor   \term{is}
+        \gor   \term{loop}
+        \gor   \term{mod}
+        \gor   \term{not}
+        \gor   \term{or}
+        \gor   \term{return}
+        \gor   \term{struct}
+        \gorln \term{type}
+        \gor   \term{where}
+        \gor   \term{while}
+        \gor   \term{yield}
+        \gor   \term{\_} \\
   \\
-  operator \eq
-           \term{+}
-    \gor   \term{-}
-    \gor   \term{*}
-    \gor   \term{/}
-    \gorln \term{(}
-    \gor   \term{)}
-    \gor   \term{[}
-    \gor   \term{]}
-    \gor   \term{\{}
-    \gor   \term{\}}
-    \gor   \term{:}
-    \gorln \term{==}
-    \gor   \term{<}
-    \gor   \term{<=}
-    \gor   \term{>}
-    \gor   \term{>=}
-    \gorln \term{:=}
-    \gor   \term{<-}
-    \gor   \term{\$}
-    \gor   \term{\%}
+  \gd{operator} \eq
+                \term{+}
+         \gor   \term{-}
+         \gor   \term{*}
+         \gor   \term{/}
+         \gorln \term{(}
+         \gor   \term{)}
+         \gor   \term{[}
+         \gor   \term{]}
+         \gor   \term{\{}
+         \gor   \term{\}}
+         \gor   \term{:}
+         \gorln \term{==}
+         \gor   \term{<}
+         \gor   \term{<=}
+         \gor   \term{>}
+         \gor   \term{>=}
+         \gorln \term{:=}
+         \gor   \term{<-}
+         \gor   \term{\$}
+         \gor   \term{\%}
 \end{bnf}
 
 An \emph{identifier}\index{identifier} consists of a "letter" or underscore followed by zero or more letters, digits, underscores, and single quotes. Simple, unqualified identifiers (\(id\)) are always resolved within current module and scope. In order to be able to specify which module identifier belongs to, in most places identifier may be prefixed with module name and "\texttt{:}" character to form a \emph{qualified identifier}\index{qualified identifier} (\(qid\)).
@@ -106,7 +106,7 @@ Implementations that offer lints or warnings for unused parameters/variables/ite
 \section{Comments}
 
 \begin{bnf}
-  comment \eq \# \ \gmany{noneol} \ eol
+  \gd{comment} \eq \# \ \gmany{\gp{noneol}} \ \gp{eol}
 \end{bnf}
 
 \emph{Comments}\index{comment} are valid white space. Comments in Intentio are only line-based, there is no concept of block comment.
@@ -114,19 +114,19 @@ Implementations that offer lints or warnings for unused parameters/variables/ite
 \section{Numeric Literals}
 
 \begin{bnf}
-  decimal     \eq decdig \ \gmany{ \ decdig \gor \term{\_} \ } \\
-  binary      \eq (\term{0b} \gor \term{0B}) \ bindig \ \gmany{ \ bindig \gor \term{\_} \ } \\
-  octal       \eq (\term{0o} \gor \term{0O}) \ octdig \ \gmany{ \ octdig \gor \term{\_} \ } \\
-  hexadecimal \eq (\term{0x} \gor \term{0X}) \ hexdig \ \gmany{ \ hexdig \gor \term{\_} \ } \\
+  \gd{decimal}     \eq \gp{decdig} \ \gmany{ \ \gp{decdig} \gor \term{\_} \ } \\
+  \gd{binary}      \eq (\term{0b} \gor \term{0B}) \ \gp{bindig} \ \gmany{ \ \gp{bindig} \gor \term{\_} \ } \\
+  \gd{octal}       \eq (\term{0o} \gor \term{0O}) \ \gp{octdig} \ \gmany{ \ \gp{octdig} \gor \term{\_} \ } \\
+  \gd{hexadecimal} \eq (\term{0x} \gor \term{0X}) \ \gp{hexdig} \ \gmany{ \ \gp{hexdig} \gor \term{\_} \ } \\
   \\
-  integer \eq binary \gor octal \gor decimal \gor hexadecimal \\
+  \gd{integer} \eq \gp{binary} \gor \gp{octal} \gor \gp{decimal} \gor \gp{hexadecimal} \\
 \end{bnf}
 
 \begin{bnf}
-  exponent \eq ( \term{e} \gor \term{E} ) \ \gtry{ \term{+} \gor \term{-} } \ \gmany{\term{\_}} \ decimal \\
+  \gd{exponent} \eq ( \term{e} \gor \term{E} ) \ \gtry{ \term{+} \gor \term{-} } \ \gmany{\term{\_}} \ \gp{decimal} \\
   \\
-  float \eq    decimal \ \term{.} \ decimal \ \gtry{exponent}
-        \gorln decimal \ exponent
+  \gd{float} \eq    \gp{decimal} \ \term{.} \ \gp{decimal} \ \gtry{\gp{exponent}}
+             \gorln \gp{decimal} \ \gp{exponent}
 \end{bnf}
 
 A \emph{numeric literal}\index{numeric literal} is either an \emph{integer literal}\index{integer literal} or \emph{floating-point   literal}\index{floating-point literal}. Integer literals may be given in decimal (the default), binary (prefixed by \texttt{0b} or \texttt{0B}), octal (prefixed by \texttt{0o} or \texttt{0O}) or hexadecimal notation (prefixed by \texttt{0x} or \texttt{0X}). Floating-point literals are always decimal. A floating literal must contain digits both before and after the decimal point. A "\texttt{\_}" character is allowed inside numeric literals for visual separation of digit groups, for instance \lstinline{476_981__109_528_} is equal to \lstinline{476981109528}. Negative numeric literals are described grammatically, not lexically.
@@ -134,7 +134,7 @@ A \emph{numeric literal}\index{numeric literal} is either an \emph{integer liter
 \section{String Literals}
 
 \begin{bnf}
-  string \eq \gtry{stringmod} \ ( \ string' \gor charstring \gor rawstring \gor regexstring \ )
+  \gd{string} \eq \gtry{\gp{stringmod}} \ ( \ \gp{string'} \gor \gp{charstring} \gor \gp{rawstring} \gor \gp{regexstring} \ )
 \end{bnf}
 
 Intentio features very flexible string literals syntax. String literals can be written in four forms (regular, character, raw and regular expression) that make the literal compile to one of three value types (\lstinline{String}, \lstinline{Char} or \lstinline{Regex}). String literals can be also prefixed with few modifiers that alter literal value before compiling it to value.
@@ -142,7 +142,7 @@ Intentio features very flexible string literals syntax. String literals can be w
 \subsection*{Regular String Literals}
 
 \begin{bnf}
-  string' \eq \term{"} \ \gmany{ \ \gdiff{any}{\ \term{"} \gor \term{\textbackslash} \ } \gor escseq \ } \ \term{"}
+  \gd{string'} \eq \term{"} \ \gmany{ \ \gdiff{\gp{any}}{\ \term{"} \gor \term{\textbackslash} \ } \gor \gp{escseq} \ } \ \term{"}
 \end{bnf}
 
 A \emph{string literal}\index{string literal} is a sequence of Unicode characters, typed either directly or via escape sequence. String literals are compiled to \lstinline{String} terms.
@@ -150,7 +150,7 @@ A \emph{string literal}\index{string literal} is a sequence of Unicode character
 \subsection*{Character Literals}
 
 \begin{bnf}
-  charstring \eq \term{c"} \ ( \ \gdiff{any}{\ \term{'} \gor \term{\textbackslash} \ } \gor escseq \ ) \ \term{"}
+  \gd{charstring} \eq \term{c"} \ ( \ \gdiff{\gp{any}}{\ \term{'} \gor \term{\textbackslash} \ } \gor \gp{escseq} \ ) \ \term{"}
 \end{bnf}
 
 A \emph{character literal}\index{character literal} is a single Unicode character string, typed either directly or via escape sequence. Character literals are compiled to \lstinline{Char} terms. The implementation is required to verify that character literal makes only one character.
@@ -158,11 +158,11 @@ A \emph{character literal}\index{character literal} is a single Unicode characte
 \subsection*{Raw String Literals}
 
 \begin{bnf}
-  rawstring      \eq \term{r} \ rawstring'(0) \\
-  rawstring'(n)  \eq    \term{"} \ rawstring''(n) \ \term{"}
-                 \gorln \term{\#} \ rawstring'(n+1) \ \term{\#} \\
-  rawstring''(n) \eq \textnormal{An \(\gmany{any}\) that does not contain} \\
-                 & & \textnormal{\term{"} followed by \term{\#} repeated \(n\) times.}
+  \gd{rawstring}      \eq \term{r} \ \gp{rawstring'}(0) \\
+  \gd{rawstring'}(n)  \eq    \term{"} \ \gp{rawstring''}(n) \ \term{"}
+                      \gorln \term{\#} \ \gp{rawstring'}(n+1) \ \term{\#} \\
+  \gd{rawstring''}(n) \eq \textnormal{An \(\gmany{\gp{any}}\) that does not contain} \\
+                      & & \textnormal{\term{"} followed by \term{\#} repeated \(n\) times.}
 \end{bnf}
 
 A \emph{raw string literal}\index{raw string literal} does not process any escape sequences. It starts with letter \texttt{r}, followed by zero or more repetitions of hash symbol (\texttt{\#}) and double quote (\texttt{"}). The raw string body can contain any sequence of Unicode characters and is terminated only by another double quote (\texttt{"}) followed by the same number of hashes (\texttt{\#}) that proceeded the opening quote.
@@ -178,7 +178,7 @@ Examples of raw string literals:
 \subsection*{Regular Expression Literals}
 
 \begin{bnf}
-  regexstring \eq \term{x} \ ( \ string' \gor rawstring \ )
+  \gd{regexstring} \eq \term{x} \ ( \ \gp{string'} \gor \gp{rawstring} \ )
 \end{bnf}
 
 A \emph{regular expression literal}\index{regular expression literal} is a string literal that represents a regular expression and is compiled to \lstinline{Regex} term. The exact syntactic and semantic details of regular expressions in Intentio are implementation dependent.
@@ -186,7 +186,7 @@ A \emph{regular expression literal}\index{regular expression literal} is a strin
 \subsection*{Modifiers}
 
 \begin{bnf}
-  stringmod \eq \term{t} \gor \term{u}
+  \gd{stringmod} \eq \term{t} \gor \term{u}
 \end{bnf}
 
 A \emph{string literal modifier}\index{string literal modifier} is a special flag that, when enabled, adds a step of processing of the literal value before compiling it to Intentio term. The order of modifiers is respected, they are processed from left-most modifier to right-most one.
@@ -203,11 +203,11 @@ Intentio provides following modifiers:
 \subsection*{Escape Sequences}
 
 \begin{bnf}
-  charescseq \eq \term{\textbackslash '} \gor \term{\textbackslash "} \gor \term{\textbackslash n} \gor \term{\textbackslash r} \gor \term{\textbackslash t} \gor \term{\textbackslash \textbackslash} \gor \term{\textbackslash 0} \\
-  asciiescseq \eq \term{\textbackslash x} \ hexdig \ hexdig \\
-  unicodeescseq \eq \term{\textbackslash u\{} \ \gmanya{ \ hexdig \gor \term{\_} \ } \ \term{\}} \\
+  \gd{charescseq} \eq \term{\textbackslash '} \gor \term{\textbackslash "} \gor \term{\textbackslash n} \gor \term{\textbackslash r} \gor \term{\textbackslash t} \gor \term{\textbackslash \textbackslash} \gor \term{\textbackslash 0} \\
+  \gd{asciiescseq} \eq \term{\textbackslash x} \ \gp{hexdig} \ \gp{hexdig} \\
+  \gd{unicodeescseq} \eq \term{\textbackslash u\{} \ \gmanya{ \ \gp{hexdig} \gor \term{\_} \ } \ \term{\}} \\
   \\
-  escseq \eq charescseq \gor asciiescseq \gor unicodeescseq
+  \gd{escseq} \eq \gp{charescseq} \gor \gp{asciiescseq} \gor \gp{unicodeescseq}
 \end{bnf}
 
 Some \emph{escape sequences}\index{escape sequence} are available in non-raw string literals. An escape starts with a backslash character (\texttt{\textbackslash}) and continues with one of the following forms:

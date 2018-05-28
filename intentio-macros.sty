@@ -5,6 +5,8 @@
 
 \newenvironment{bnfutils}
 {
+  \newcommand{\gd}[1]{\hypertarget{##1}{##1}}
+  \newcommand{\gp}[1]{\hyperlink{##1}{##1}}
   \newcommand{\eq}{& \rightarrow &}
   \newcommand{\gor}{\hskip0.5em\relax | \hskip0.5em\relax}
   \newcommand{\gorln}{\\ & \gor &}
