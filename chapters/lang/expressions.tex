@@ -5,16 +5,16 @@ This chapter describes syntax and semantics of Intentio \emph{expressions}. Inte
 Intentio does not have a concept of \emph{statement} known from other programming languages.
 
 \begin{bnf}
-  \gd{expr} \eq    \term{\gp{qid}}                     \gcomm{variable or item}
-            \gorln \term{\gp{literal}}
-            \gorln blockexpr                           \gcomm{block expression}
-            \gorln unopexpr                            \gcomm{unary operator expression}
-            \gorln binopexpr                           \gcomm{binary operator expression}
+  \gd{expr} \eq    \gp{qidexpr}                        \gcomm{variable value or item}
+            \gorln \gp{literalexpr}                    \gcomm{literal expression}
+            \gorln \gp{blockexpr}                      \gcomm{block expression}
+            \gorln \gp{unopexpr}                       \gcomm{unary operator expression}
+            \gorln \gp{binopexpr}                      \gcomm{binary operator expression}
             \gorln \term{(} \ \gp{expr} \ \term{)}     \gcomm{parenthesized expression}
-            \gorln callexpr                            \gcomm{function call}
-            \gorln loopexpr                            \gcomm{loops}
-            \gorln ifexpr                              \gcomm{conditionals}
-            \gorln returnexpr                          \gcomm{return expression}
+            \gorln \gp{callexpr}                       \gcomm{call expression}
+            \gorln \gp{loopexpr}                       \gcomm{loops}
+            \gorln \gp{ifexpr}                         \gcomm{conditionals}
+            \gorln \gp{returnexpr}                     \gcomm{return expression}
 \end{bnf}
 
 An \emph{expression}\index{expression} is an syntactic construct that \emph{evaluates} to a term. It may either \emph{succeed} or \emph{fail} resulting in a result. During the evaluation, expression may perform \emph{side effects}, for example it can mutate some state or perform execution jump. The meaning of each kind of expression dictates several things:
@@ -24,3 +24,47 @@ An \emph{expression}\index{expression} is an syntactic construct that \emph{eval
   \item The order in which to evaluate the sub-expressions
   \item How to combine the sub-expressions' results to obtain the result of the expression
 \end{itemize}
+
+\section{Variables and Items}
+
+\section{Literal expressions}
+
+\section{Block expressions}
+
+\begin{bnf}
+  \gd{blockexpr} \eq \gp{braceblock}   \gcomm{block expression} \\
+  \gd{block} \eq \gp{braceblock}       \gcomm{block used as part of other expressions} \\
+  \\
+  \gd{braceblock} \eq \term{\{} \ \gmany{\gp{expr} \ \term{;}} \ \term{\}}
+\end{bnf}
+
+A \emph{block expression}\index{block expression} is a possibly empty sequence of expressions. Each block introduces a new namespace scope, this means that variables introduced within block are in scope for only the block itself.
+
+Block evaluates expressions sequentially while each expression evaluates successfully. On first failing expression, block stops evaluation and its result is equal to the result of failing expression. Otherwise, if all expressions succeeded, block evaluates to result of last expression. If block is empty, its result is a \emph{unit}.
+
+\section{Operator expressions}
+
+\section{Call expressions}
+
+\section{Loops}
+
+\section{Conditionals}
+
+\section{Return expressions}
+
+\begin{bnf}
+  \gd{returnexpr} \eq \term{return} \ \gtry{\gp{expr}}
+\end{bnf}
+
+A \emph{return expression}\index{return expression} terminates execution of enclosing function, making it return the result of evaluating provided expression. In case no expression is given, a \emph{unit} is returned.
+
+\begin{example}[Return expression]
+\begin{lstlisting}
+fun abs(a) {
+  if a < 0 {
+    return -a;
+  }
+  return a;
+}
+\end{lstlisting}
+\end{example}
