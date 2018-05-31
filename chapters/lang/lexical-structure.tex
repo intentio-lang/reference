@@ -158,7 +158,7 @@ A \emph{string literal}\index{string literal} is a sequence of Unicode character
 \subsubsection*{Character Literals}
 
 \begin{bnf}
-  \gd{charstring} \eq \term{c"} \ ( \ \gdiff{\gp{any}}{\ \term{'} \gor \term{\textbackslash} \ } \gor \gp{escseq} \ ) \ \term{"}
+  \gd{charstring} \eq \term{c"} \ ( \ \gdiff{\gp{any}}{\ \term{"} \gor \term{\textbackslash} \ } \gor \gp{escseq} \ ) \ \term{"}
 \end{bnf}
 
 A \emph{character literal}\index{character literal} is a single Unicode character string, typed either directly or via escape sequence. Character literals are compiled to \lstinline{Char} terms. The implementation is required to verify that character literal makes only one character.
