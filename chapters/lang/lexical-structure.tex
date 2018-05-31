@@ -8,6 +8,16 @@ In this chapter all white space is expressed explicitly in syntax descriptions, 
 
 Intentio program source is interpreted as a sequence of Unicode code points encoded in UTF-8, though most grammar rules are defined in terms of printable ASCII code points.
 
+Token stream of Intentio program is defined as:
+
+\begin{bnf}
+  \gd{lexprogram} \eq \gmany{\gp{whitespace}} \ \gmany{ \ \gp{token} \ \gp{whitespace} \ } \\
+  \gd{token}      \eq  \gp{keyword}
+                  \gor \gp{literal}
+                  \gor \gp{operator}
+                  \gor \gp{qid}
+\end{bnf}
+
 Intentio is \emph{case sensitive} language and each code point is distinct; for instance, upper and lower case letters are different characters.
 
 The NUL character (U+0000) may be not allowed in whole program source text.
@@ -23,6 +33,21 @@ Following productions define Unicode character sets which are used to define non
   \item \(\gd{xidstart}\) and \(\gd{xidcont}\) are sets of characters that have properties \emph{XID\_start} and \emph{XID\_continue} as in Unicode Standard Annex \#31\cite{UAX31}, these productions define valid identifier characters
   \item \(\gd{any}\) is any single Unicode character with all implementation-specific character restrictions applied
   \item \(\gd{eol}\) matches either line feed character \texttt{\textbackslash n} (U+000A, Unix-style newline marker) or carriage return and then line feed characters \texttt{\textbackslash r\textbackslash n} (U+000D U+000A, Windows-style newline marker)
+  \item \(\gd{whitespacechar}\) matches any character that has the \emph{Pattern\_White\_Space} Unicode property, namely:
+
+    \begin{itemize}
+      \item horizontal tab \texttt{\textbackslash t} (U+0009)
+      \item line feed \texttt{\textbackslash n} (U+000A)
+      \item vertical tab (U+000B)
+      \item form feed (U+000C)
+      \item carriage return \texttt{\textbackslash r} (U+000D)
+      \item space (U+0020)
+      \item next line (U+0085)
+      \item left-to-right mark (U+200E)
+      \item right-to-left mark (U+200F)
+      \item line separator (U+2028)
+      \item paragraph separator (U+2029)
+    \end{itemize}
 \end{itemize}
 \end{bnfutils}
 
@@ -105,13 +130,14 @@ An \emph{identifier}\index{identifier} consists of a "letter" or underscore foll
 
 Implementations that offer lints or warnings for unused parameters/variables/items are encouraged to suppress such warnings for identifiers beginning with underscore. This allows programmers to use \texttt{\_arg} for a parameter that they expect to be unused.
 
-\section{Comments}
+\section{Comments and White space}
 
 \begin{bnf}
-  \gd{comment} \eq \# \ \gmany{\gp{noneol}} \ \gp{eol}
+  \gd{whitespace} \eq \gmanya{ \ \gp{whitespacechar} \gor \gp{comment} \ } \\
+  \gd{comment}    \eq \# \ \gmany{\gp{noneol}} \ \gp{eol}
 \end{bnf}
 
-\emph{Comments}\index{comment} are valid white space. Comments in Intentio are only line-based, there is no concept of block comment.
+A \emph{white space}\index{white space} is a non-empty sequence of white space characters or \emph{comments}\index{comment}. Comments in Intentio are only line-based, there is no concept of block comment.
 
 \section{Literals}
 
