@@ -12,10 +12,10 @@ Token stream of Intentio program is defined as:
 
 \begin{bnf}
   \gd{lexprogram} \eq \gmany{\gp{whitespace}} \ \gmany{ \ \gp{token} \ \gp{whitespace} \ } \\
-  \gd{token}      \eq  \gp{keyword}
-                  \gor \gp{literal}
+  \gd{token}      \eq  \gp{id}
+                  \gor \gp{keyword}
                   \gor \gp{operator}
-                  \gor \gp{qid}
+                  \gor \gp{literal}
 \end{bnf}
 
 Intentio is \emph{case sensitive} language and each code point is distinct; for instance, upper and lower case letters are different characters.
@@ -68,6 +68,7 @@ Additionally:
 
 \begin{bnf}
   \gd{id}  \eq \gdiff{( \ \gp{xidstart} \ \gmany{\gp{xidcont} \gor \term{'}} \ )}{\gp{keyword}} \\
+  % TODO Make qid expression
   \gd{qid} \eq \gp{id} \ \term{:} \ \gp{id} \\
   \\
   \gd{keyword} \eq
