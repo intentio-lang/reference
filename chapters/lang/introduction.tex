@@ -20,7 +20,7 @@ Following conventions are used for presenting productions syntax:
 \begin{bnfutils}
 \begin{center}
 \begin{tabular}[t]{ll}
-  \(\term{token}\)        & terminal symbol (in fixed-width font) \\
+  \(\term{token}\)        & terminal symbol \\
   \(rule\)                & nonterminal symbol (in italic font) \\
   \((pat)\)               & grouping \\
   \(\gtry{pat}\)          & optional (0 or 1 times) \\
@@ -34,11 +34,11 @@ Following conventions are used for presenting productions syntax:
 \end{center}
 \end{bnfutils}
 
-\subsubsection*{Parameterized productions}
+\subsubsection*{Parametrized productions}
 
-Some productions in Intentio's grammar (like raw string literals) cannot be expressed using context-free grammar with finite number of productions. In order to reduce need of falling back to natural language, a concept of \emph{parameterized productions} is used throughout this document.
+Some productions in Intentio's grammar (like raw string literals) cannot be expressed using context-free grammar with finite number of productions. In order to reduce need of falling back to natural language, a concept of \emph{parametrized productions} is used throughout this document.
 
-A production \(A(x_1, x_2, ..., x_n) \rightarrow B\), parameterized over arguments \(x_1, x_2, ..., x_n\), defines different production for each combination of its arguments.
+A production \(A(x_1, x_2, ..., x_n) \rightarrow B\), parametrized over arguments \(x_1, x_2, ..., x_n\), defines different production for each combination of its arguments.
 
 \subsubsection*{Unicode productions}
 
@@ -49,16 +49,16 @@ A few productions in Intentio's grammar permit Unicode\cite{Unicode} code points
 Examples of Intentio program fragments are given in fixed-width font:
 
 \begin{lstlisting}
-  fun main() {
-    x, y := 4, 3;
-    println(f"sum = ${x + y}");
-  }
+fun main() {
+  x = 4; y = 3;
+  println("sum = " + (x + y));
+}
 \end{lstlisting}
 
-In some situations, there are \emph{placeholders} in program fragments representing arbitrary pieces of Intentio code are written in italics. By convention $e$ will mean expressions, $d$ - item declarations, $t$ - types, etc.:
+In some situations, there are \emph{placeholders} in program fragments representing arbitrary pieces of Intentio code. Placeholders are written in italics. By convention $e$ will mean expressions, $d$ - item declarations, $t$ - types, etc.:
 
 \begin{lstlisting}[mathescape=true]
-  if $e_1$ { $e_2$ } else { $e_3$ }
+if $e_1$ { $e_2$ } else { $e_3$ }
 \end{lstlisting}
 
 
@@ -75,7 +75,7 @@ An Intentio program is structured syntactically and semantically into five abstr
   \item At the topmost of each Intentio program or library is an \emph{assembly}. In compiled environments assembly is an unit of compilation, while in interpreted environments assembly is a whole set of loaded modules.
   \item At the topmost of each assembly is a set of \emph{modules}. Modules provide a way to control namespaces and to re-use software in larger programs. A particular source code file of Intentio program consists of one module. Module structure is flat, there is no concept of submodule.
   \item The top level of each module is a set of \emph{item declarations}. An item is a component of module, such as a function, type definition or constant variable.
-  \item Items which contain the real, executable code are built of \emph{expressions}. Expression denotes how to evaluate a \emph{term} and evaluating expression returns a \emph{result}.
+  \item Items which contain the real, executable code are built of \emph{statements} and \emph{expressions}. Statements express sequential, side-effect-full actions to carry out. Expression denotes how to evaluate a \emph{term} and evaluating expression returns a \emph{result}.
   \item At the bottom level is Intentio's \emph{lexical structure}. It describes how to build tokens - the most basic blocks of program's source code from sequences of characters in source file.
 \end{enumerate}
 
@@ -106,9 +106,9 @@ Following Haskell-style code listing describes relationships between these conce
 There are three distinct namespaces in Intentio:
 
 \begin{description}
-  \item [Item namespace\index{item namespace}] Consists item and variable names.
-  \item [Module namespace\index{module namespace}] Consists of module names and import renames.
-  \item [Type namespace\index{type namespace}] Consists of type names.
+  \item [Item namespace\index{namespace!item namespace}] Consists item and variable names.
+  \item [Module namespace\index{namespace!module namespace}] Consists of module names and import renames.
+  \item [Type namespace\index{namespace!type namespace}] Consists of type names.
 \end{description}
 
 There are no constraints on names belonging to particular namespace, therefore it is possible for name \texttt{Int} to simultaneously denote an item/variable, module and type.

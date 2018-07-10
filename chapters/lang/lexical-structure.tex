@@ -11,8 +11,9 @@ Intentio program source is interpreted as a sequence of Unicode code points enco
 Token stream of Intentio program is defined as:
 
 \begin{bnf}
-  \gd{lexprogram} \eq \gmany{\gp{whitespace}} \ \gmany{ \ \gp{token} \ \gp{whitespace} \ } \\
+  \gd{lexprogram} \eq \gtry{\gp{whitespace}} \ \gmany{ \ \gp{token} \ \gtry{\gp{whitespace}} \ } \\
   \gd{token}      \eq  \gp{id}
+                  \gor \gp{qid}
                   \gor \gp{keyword}
                   \gor \gp{operator}
                   \gor \gp{literal}
@@ -56,49 +57,44 @@ Additionally:
 \begin{bnf}
   \gd{noneol} \eq \gdiff{\gp{any}}{\gp{eol}} \\
   \\
-  \gd{decdig} \eq 0 \gor 1 \gor ... \gor 9 \\
-  \gd{bindig} \eq 0 \gor 1 \\
-  \gd{octdig} \eq 0 \gor 1 \gor ... \gor 7 \\
-  \gd{hexdig} \eq  0 \gor 1 \gor ... \gor 9
-              \gor A \gor B \gor ... \gor F
-              \gor a \gor b \gor ... \gor f
+  \gd{decdig} \eq \term{0} \gor \term{1} \gor ... \gor \term{9} \\
+  \gd{bindig} \eq \term{0} \gor \term{1} \\
+  \gd{octdig} \eq \term{0} \gor \term{1} \gor ... \gor \term{7} \\
+  \gd{hexdig} \eq  \term{0} \gor \term{1} \gor ... \gor \term{9}
+              \gor \term{A} \gor \term{B} \gor ... \gor \term{F}
+              \gor \term{a} \gor \term{b} \gor ... \gor \term{f}
 \end{bnf}
 
 \section{Identifiers, Keywords and Operators}
 
 \begin{bnf}
   \gd{id}  \eq \gdiff{( \ \gp{xidstart} \ \gmany{\gp{xidcont} \gor \term{'}} \ )}{\gp{keyword}} \\
-  % TODO Make qid expression
   \gd{qid} \eq \gp{id} \ \term{:} \ \gp{id} \\
   \\
   \gd{keyword} \eq
-               \term{abstract}
-        \gor   \term{and}
+               \term{and}
         \gor   \term{break}
-        \gor   \term{case}
         \gor   \term{const}
-        \gor   \term{continue}
-        \gorln \term{do}
+        \gor   \term{do}
         \gor   \term{else}
         \gor   \term{enum}
         \gor   \term{export}
-        \gor   \term{fail}
+        \gorln \term{fail}
         \gor   \term{fun}
         \gor   \term{if}
         \gor   \term{impl}
-        \gorln \term{import}
+        \gor   \term{import}
         \gor   \term{in}
         \gor   \term{is}
-        \gor   \term{loop}
         \gor   \term{module}
-        \gor   \term{not}
+        \gorln \term{not}
         \gor   \term{or}
         \gor   \term{return}
-        \gorln \term{struct}
+        \gor   \term{struct}
+        \gor   \term{trait}
         \gor   \term{type}
-        \gor   \term{where}
         \gor   \term{while}
-        \gor   \term{yield}
+        \gorln \term{yield}
         \gor   \term{\_} \\
   \\
   \gd{operator} \eq
@@ -112,20 +108,18 @@ Additionally:
          \gor   \term{]}
          \gor   \term{\{}
          \gor   \term{\}}
-         \gor   \term{:}
          \gor   \term{;}
          \gorln \term{==}
          \gor   \term{<}
          \gor   \term{<=}
          \gor   \term{>}
          \gor   \term{>=}
-         \gorln \term{:=}
-         \gor   \term{<-}
-         \gor   \term{\$}
-         \gor   \term{\%}
+         \gor   \term{===}
+         \gor   \term{!==}
+         \gorln \term{=}
 \end{bnf}
 
-An \emph{identifier}\index{identifier} consists of a "letter" or underscore followed by zero or more letters, digits, underscores, and single quotes. Simple, unqualified identifiers (\(id\)) are always resolved within current module and scope. In order to be able to specify which module identifier belongs to, in most places identifier may be prefixed with module name and "\texttt{:}" character to form a \emph{qualified identifier}\index{qualified identifier} (\(qid\)).
+An \emph{identifier}\index{identifier} consists of a "letter" or underscore followed by zero or more letters, digits, underscores, and single quotes. Simple, unqualified identifiers (\(id\)) are always resolved within current module and scope. In order to be able to specify which module identifier belongs to, in most places identifier may be prefixed with module name and "\texttt{:}" character to form a \emph{qualified identifier}\index{identifier!qualified identifier} (\(qid\)).
 
 \emph{Keywords}\index{keyword} are identifier-like tokens which have special meaning in the grammar, all of them are excluded from the \(id\) rule. \emph{Operators}\index{operator} are another special tokens, these ones are formed from symbol characters. \(keyword\) and \(operator\) productions have no use in Intentio grammar definition, instead particular tokens are used.
 
@@ -135,7 +129,7 @@ Implementations that offer lints or warnings for unused parameters/variables/ite
 
 \begin{bnf}
   \gd{whitespace} \eq \gmanya{ \ \gp{whitespacechar} \gor \gp{comment} \ } \\
-  \gd{comment}    \eq \# \ \gmany{\gp{noneol}} \ \gp{eol}
+  \gd{comment}    \eq \term{\#} \ \gmany{\gp{noneol}} \ \gp{eol}
 \end{bnf}
 
 A \emph{white space}\index{white space} is a non-empty sequence of white space characters or \emph{comments}\index{comment}. Comments in Intentio are only line-based, there is no concept of block comment.
@@ -164,7 +158,7 @@ A \emph{white space}\index{white space} is a non-empty sequence of white space c
              \gorln \gp{decimal} \ \gp{exponent}
 \end{bnf}
 
-A \emph{numeric literal}\index{numeric literal} is either an \emph{integer literal}\index{integer literal} or \emph{floating-point   literal}\index{floating-point literal}. Integer literals may be given in decimal (the default), binary (prefixed by \texttt{0b} or \texttt{0B}), octal (prefixed by \texttt{0o} or \texttt{0O}) or hexadecimal notation (prefixed by \texttt{0x} or \texttt{0X}). Floating-point literals are always decimal. A floating literal must contain digits both before and after the decimal point. A "\texttt{\_}" character is allowed inside numeric literals for visual separation of digit groups, for instance \lstinline{476_981__109_528_} is equal to \lstinline{476981109528}. Negative numeric literals are described grammatically, not lexically.
+A \emph{numeric literal}\index{literal!numeric literal} is either an \emph{integer literal}\index{literal!numeric literal!integer literal} or \emph{floating-point literal}\index{literal!numeric literal!floating-point literal}. Integer literals may be given in decimal (the default), binary (prefixed by \texttt{0b} or \texttt{0B}), octal (prefixed by \texttt{0o} or \texttt{0O}) or hexadecimal notation (prefixed by \texttt{0x} or \texttt{0X}). Floating-point literals are always decimal. A floating literal must contain digits both before and after the decimal point. A "\texttt{\_}" character is allowed inside numeric literals for visual separation of digit groups, for instance \lstinline{476_981__109_528_} is equal to \lstinline{476981109528}. Negative numeric literals are described grammatically, not lexically.
 
 \subsection{String Literals}
 
@@ -177,18 +171,18 @@ Intentio features very flexible string literals syntax. String literals can be w
 \subsubsection*{Regular String Literals}
 
 \begin{bnf}
-  \gd{string'} \eq \term{"} \ \gmany{ \ \gdiff{\gp{any}}{\ \term{"} \gor \term{\textbackslash} \ } \gor \gp{escseq} \ } \ \term{"}
+  \gd{string'} \eq \term{"} \ \gmany{ \ \gdiff{\gp{any}}{(\term{"} \gor \term{\textbackslash})} \gor \gp{escseq} \ } \ \term{"}
 \end{bnf}
 
-A \emph{string literal}\index{string literal} is a sequence of Unicode characters, typed either directly or via escape sequence. String literals are compiled to \lstinline{String} terms.
+A \emph{string literal}\index{literal!string literal} is a sequence of Unicode characters, typed either directly or via escape sequence. String literals are compiled to \lstinline{String} terms.
 
 \subsubsection*{Character Literals}
 
 \begin{bnf}
-  \gd{charstring} \eq \term{c"} \ ( \ \gdiff{\gp{any}}{\ \term{"} \gor \term{\textbackslash} \ } \gor \gp{escseq} \ ) \ \term{"}
+  \gd{charstring} \eq \term{c"} \ ( \ \gdiff{\gp{any}}{(\term{"} \gor \term{\textbackslash})} \gor \gp{escseq} \ ) \ \term{"}
 \end{bnf}
 
-A \emph{character literal}\index{character literal} is a single Unicode character string, typed either directly or via escape sequence. Character literals are compiled to \lstinline{Char} terms. The implementation is required to verify that character literal makes only one character.
+A \emph{character literal}\index{literal!string literal!character literal} is a single Unicode character string, typed either directly or via escape sequence. Character literals are compiled to \lstinline{Char} terms. The implementation is required to verify that character literal makes only one character.
 
 \subsubsection*{Raw String Literals}
 
@@ -200,7 +194,7 @@ A \emph{character literal}\index{character literal} is a single Unicode characte
                       & & \textnormal{\term{"} followed by \term{\#} repeated \(n\) times.}
 \end{bnf}
 
-A \emph{raw string literal}\index{raw string literal} does not process any escape sequences. It starts with letter \texttt{r}, followed by zero or more repetitions of hash symbol (\texttt{\#}) and double quote (\texttt{"}). The raw string body can contain any sequence of Unicode characters and is terminated only by another double quote (\texttt{"}) followed by the same number of hashes (\texttt{\#}) that proceeded the opening quote.
+A \emph{raw string literal}\index{literal!string literal!raw string literal} does not process any escape sequences. It starts with letter \texttt{r}, followed by zero or more repetitions of hash symbol (\texttt{\#}) and double quote (\texttt{"}). The raw string body can contain any sequence of Unicode characters and is terminated only by another double quote (\texttt{"}) followed by the same number of hashes (\texttt{\#}) that proceeded the opening quote.
 
 \begin{example}[Raw string literals]
 \begin{lstlisting}
@@ -216,7 +210,7 @@ A \emph{raw string literal}\index{raw string literal} does not process any escap
   \gd{regexstring} \eq \term{x} \ ( \ \gp{string'} \gor \gp{rawstring} \ )
 \end{bnf}
 
-A \emph{regular expression literal}\index{regular expression literal} is a string literal that represents a regular expression and is compiled to \lstinline{Regex} term. The exact syntactic and semantic details of regular expressions in Intentio are implementation dependent.
+A \emph{regular expression literal}\index{literal!string literal!regular expression literal} is a string literal that represents a regular expression and is compiled to \lstinline{Regex} term. The exact syntactic and semantic details of regular expressions in Intentio are implementation dependent.
 
 \subsubsection*{Modifiers}
 
@@ -224,7 +218,7 @@ A \emph{regular expression literal}\index{regular expression literal} is a strin
   \gd{stringmod} \eq \term{t} \gor \term{u}
 \end{bnf}
 
-A \emph{string literal modifier}\index{string literal modifier} is a special flag that, when enabled, adds a step of processing of the literal value before compiling it to Intentio term. The order of modifiers is respected, they are processed from left-most modifier to right-most one.
+A \emph{string literal modifier}\index{literal!string literal!modifier} is a special flag that, when enabled, adds a step of processing of the literal value before compiling it to Intentio term. The order of modifiers is respected, they are processed from left-most modifier to right-most one.
 
 Because modifiers alter literal contents before its compiling, they can fundamentally change their meaning, for instance the literal \lstinline{tc"   x   "} should successfully compile and evaluate to single character "\texttt{x}".
 
