@@ -34,7 +34,7 @@ An \emph{expression}\index{expression} is an syntactic construct that \emph{eval
 % https://doc.rust-lang.org/reference/expressions.html#place-expressions-and-value-expressions
 
 \begin{bnf}
-  \gd{assign} \eq \term{\gp{id}} \ \term{:=} \ \gp{expr}  \gcomm{variable assignment}
+  \gd{assign} \eq \term{\gp{id}} \ \term{=} \ \gp{expr}  \gcomm{variable assignment}
 \end{bnf}
 
 An \emph{assignment statement}\index{statement!assignment statement} mutates already declared variable, or declares new variable in current scope.
@@ -101,7 +101,7 @@ Block evaluates statements sequentially while each statement evaluates successfu
     6 & \term{-x}, \term{not x} & right-to-left \\
     5 & \term{*}, \term{/} & left-to-right \\
     4 & \term{+}, \term{-} & left-to-right \\
-    3 & \term{==}, \term{!=}, \term{<}, \term{>}, \term{<=}, \term{>=}, \term{===}, \term{===} & left-to-right \\
+    3 & \term{==}, \term{!=}, \term{<}, \term{>}, \term{<=}, \term{>=}, \term{===}, \term{!==} & left-to-right \\
     2 & \term{and} & left-to-right \\
     1 & \term{or} & left-to-right
   \end{tabular}
@@ -135,7 +135,7 @@ Arithmetic operators apply to numeric terms (and, rarely, strings). Evaluating a
 For integer and floating-point operand terms, the \lstinline{-x} operator is defined as follows. Term type is not changed during evaluation.
 
 \begin{lstlisting}
--x == 0 - x
+-x === 0 - x
 \end{lstlisting}
 
 \subsubsection{Integer and floating-point binary operations}
@@ -191,9 +191,9 @@ Number (Int or Float) < Char < String < Regex
 
 Integers are comparable with integers in usual way. Floating-point numbers are comparable with floating-point numbers according to IEEE-754\cite{IEEE754} rules. For \lstinline{===} and \lstinline{!==} operators comparing integer to floating-point number (and vice-versa) always fails, otherwise integer is converted to float before comparison.
 
-Characters are compared using their byte representation. Strings and regular expressions are compared character by character.
+Characters are compared using their byte representation. Strings and regular expressions are compared character by character. For \lstinline{===} and \lstinline{!==} operators comparisons between characters, strings and regular expressions always fail, otherwise characters and regular expressions are always converted to strings before \lstinline{==} and \lstinline{!=} comparison.
 
-TODO(Ania): what term is returned?
+TODO(Ania): which term is returned?
 
 \subsection{Result operators}
 
