@@ -2,7 +2,7 @@
 
 This chapter describes syntax and semantics of Intentio \emph{expressions}. Intentio is an expression language. This means that all forms of result-producing or effect-causing evaluation fall into uniform syntax category of expressions. Usually each kind of expression can nest within each other kind of expression, and rules for evaluation of expressions involve specifying both the result produced by the expression and the order in which its sub-expressions are themselves evaluated.
 
-A \emph{statement}\index{statement} is either an assignment or expression. Statements serve mostly to contain and explicitly sequence expression evaluation, forming \emph{blocks}. Evaluating \emph{expression statement}\index{statement!expression statement} means evaluating contained expression.
+A \emph{statement}\index{statement} is either an assignment or expression. Statements serve mostly to encapsulate and explicitly sequence expression evaluation, forming \emph{blocks}. Evaluating \emph{expression statement}\index{statement!expression statement} means evaluating encapsulated expression.
 
 \begin{bnf}
   \gd{stmt} \eq    \gp{assign}  \gcomm{assignment statement}

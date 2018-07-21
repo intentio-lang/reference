@@ -1,1 +1,26 @@
 \chapter{Items}
+
+This chapter describes syntax and informal semantics of Intentio items. An \emph{item}\index{item} is a component of a module. Items are uniquely named within module and are organized in flat structure.
+
+Items are entirely determined at compile-time, remain fixed during execution, and may reside in read-only memory.
+
+\begin{bnf}
+  \gd{itemdecl} \eq \gp{fundecl} \gcomm{function}
+\end{bnf}
+
+\section{Functions}
+
+\begin{bnf}
+  \gd{fundecl} \eq \term{fun} \ \term{\gp{id}} \ \term{(} \ \gtry{\gp{funparams}} \ \term{)} \ \gp{braceblock} \\
+  \gd{funparams} \eq \term{\gp{id}} \ \gmany{ \ \term{,} \ \term{\gp{id}} \ } \ \gtry{\term{,}}
+\end{bnf}
+
+A \emph{function}\index{item!function} is a named block, along with optional set of parameters. Functions are declared with the keyword \lstinline{fun}. Function returns the result of evaluating of contained block. Functions may declare a set of input variables as parameters, through which the caller passes arguments into the function. Input variables behave the same as normal variables defined within function block.
+
+\begin{example}[Simple function]
+\begin{lstlisting}
+fun the_hardest_calculation(x) {
+  x * 2
+}
+\end{lstlisting}
+\end{example}
