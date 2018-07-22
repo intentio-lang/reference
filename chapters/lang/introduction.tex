@@ -1,8 +1,10 @@
 \chapter{Introduction}
 
-Intentio is domain specific, imperative programming language oriented for processing textual data. Intentio provides goal-oriented execution, generators, strong dynamic typing with optional type annotations, and a rich set of primitive data types, including Unicode strings, lists, arrays, maps, sets, arbitrary and fixed precision integers, and floating-point numbers. Intentio tries to incorporate ideas of the Icon\cite{TheIconProgrammingLanguage} programming language into modern programming patterns.
+Intentio is domain specific, imperative programming language oriented for processing textual data. Intentio provides goal-oriented execution, generators, strong dynamic typing with optional type annotations, and a set of primitive data types, including Unicode strings, fixed precision integers, and floating-point numbers. Intentio tries to incorporate ideas of the Icon\cite{TheIconProgrammingLanguage} programming language into modern programming patterns.
 
-This part defines the syntax of Intentio language and informal abstract semantics for the meaning of such programs. We leave as implementation detail how Intentio programs are manipulated, interpreted, compiled, etc. This includes all steps from source code to running program, programming environments and error messages. This also means that this document do not describe the reference compiler for Intentio language - \emph{intentioc}\cite{intentioc}.
+% TODO: "rich set of types": arbitrary precision integers, lists, maps, sets
+
+This document defines the syntax of Intentio language and informal abstract semantics for the meaning of such programs. We leave as implementation detail how Intentio programs are manipulated, interpreted, compiled, etc. This includes all steps from source code to running program, programming environments and error messages. This also means that this document does not describe the Intentio standard library nor the reference compiler for Intentio language - \emph{intentioc}\cite{intentioc}.
 
 
 \section{Notational Conventions}
@@ -53,12 +55,6 @@ fun main() {
   x = 4; y = 3;
   println("sum = " + (x + y));
 }
-\end{lstlisting}
-
-In some situations, there are \emph{placeholders} in program fragments representing arbitrary pieces of Intentio code. Placeholders are written in italics. By convention $e$ will mean expressions, $d$ - item declarations, $t$ - types, etc.:
-
-\begin{lstlisting}[mathescape=true]
-if $e_1$ { $e_2$ } else { $e_3$ }
 \end{lstlisting}
 
 
@@ -112,3 +108,18 @@ There are three distinct namespaces in Intentio:
 \end{description}
 
 There are no constraints on names belonging to particular namespace, therefore it is possible for name \texttt{Int} to simultaneously denote an item/variable, module and type.
+
+\section{Intentio source file}
+
+\begin{bnf}
+  \gd{file} \eq \gtry{\term{\gp{UTF8BOM}}} \\
+            & & \gp{module} \\
+  \\
+  \term{\gd{UTF8BOM}} \eq \term{\textbackslash u\{EFBBBF\}} \gcomm{UTF-8 Byte Order Mark}
+\end{bnf}
+
+An Intentio source file describes single module, the name of which is defined by source file name. Source files have extension \lstinline{.int}. File name \lstinline{example.int} defines module named \lstinline{example}.
+
+\begin{bnfutils}
+Intentio source files must always be encoded in UTF8. The optional UTF8 byte order mark (lexical \term{UTF8BOM} production) can only occur at the beginning of the file and must be ignored by the parser.
+\end{bnfutils}

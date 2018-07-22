@@ -1,5 +1,63 @@
 \chapter{Modules and Assemblies}
 
-A \emph{module}\index{module} is a collection of items, declared in an environment created by a set of \emph{imports} (items brought into scope from other modules). Module \emph{exports} some of its items, making them available to other modules.
+A \emph{module}\index{module} is a collection of zero or more items, declared in an environment created by a set of \emph{imports} (items brought into scope from other modules). Module \emph{exports} some of its items, making them available to other modules. Module corresponds to single \emph{compilation unit}.
 
-Similarly to items, modules are also entirely determined at compile-time, remain fixed during execution, and may reside in read-only memory. This limitation does not apply to assemblies (including single module assemblies). It is possible to provide mechanisms to dynamically compile, link, load and unload assemblies at run-time.
+\begin{bnf}
+  \gd{module} \eq \gp{exportdecl} \ \gmany{\gp{itemdecl}}
+\end{bnf}
+
+An \emph{assembly}\index{assembly} is a collection of one or more modules compiled together into single \emph{compilation target}.
+
+An Intentio \emph{program}\index{program} is an executable assembly, where one module is designated to be a \emph{main module}. The main module must export a 0-arity function called \lstinline{main}. This function is an \emph{entry-point} or \emph{main function} of the program. Entry point is not required to be exported by main module. When program is executed, this function is called and, and returned term is discarded. Depending of running environment, the result state of function call may be interpreted as program success or failure.
+
+An Intentio \emph{library}\index{library} is an assembly containing reusable modules for usage in other programs.
+
+Modules are entirely determined at compile-time, remain fixed during execution, and may reside in read-only memory. This limitation does not apply to assemblies (including single module assemblies). It is possible to provide mechanisms to dynamically compile, link, load and unload assemblies at run-time.
+
+\begin{example}[Simple Module]
+\begin{lstlisting}
+# File: simple_module.int
+
+export (compute, hello)
+
+import math
+
+fun compute(x) {
+  x * math:sin(math:pi / x);
+}
+
+fun hello() {
+  println("Hello World!");
+}
+\end{lstlisting}
+\end{example}
+
+\section{Export declaration}
+
+\begin{bnf}
+  \gd{exportdecl} \eq \term{export} \ \term{(} \ \gtry{\gp{exportspec}} \ \term{)} \\
+  \gd{exportspec} \eq \term{\gp{id}} \ \gmany{ \ \term{,} \ \term{\gp{id}} \ } \ \gtry{\term{,}}
+\end{bnf}
+
+An \emph{export declaration}\index{module!export declaration} is a list of names of all items that are exported by this module. Module may \emph{re-export} items imported from other modules.
+
+\begin{example}[Re-exporting]
+\begin{lstlisting}
+# File: myprelude.int
+
+export (open, writeln, sin, pi)
+
+import io:open
+import io:writeln
+import math:sin
+import math:pi
+\end{lstlisting}
+\end{example}
+
+\section{Prelude}
+
+Each Intentio module implicitly imports all items from a \emph{prelude}\index{prelude} module (each module has implicit \lstinline{import prelude:*} at the very top). The name of the prelude module and its contents are implementation specific.
+
+\section{Module resolution}
+
+The exact behaviour of module resolution algorithm is implementation-dependent, but typically a list of directories is scanned for a file with the same name as imported module, plus the \lstinline{.int} extension. The first directory on the list should always be a directory of importing module source file. The list may be specified by environment variable or command line option passed to the compiler.
