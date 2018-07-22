@@ -5,7 +5,8 @@ This chapter describes syntax and informal semantics of Intentio items. An \emph
 Items are entirely determined at compile-time, remain fixed during execution, and may reside in read-only memory.
 
 \begin{bnf}
-  \gd{itemdecl} \eq \gp{fundecl} \gcomm{function}
+  \gd{itemdecl} \eq    \gp{fundecl}    \gcomm{function}
+                \gorln \gp{importdecl} \gcomm{import declaration}
 \end{bnf}
 
 \section{Functions}
@@ -21,6 +22,38 @@ A \emph{function}\index{item!function} is a named block, along with optional set
 \begin{lstlisting}
 fun the_hardest_calculation(x) {
   x * 2
+}
+\end{lstlisting}
+\end{example}
+
+\section{Import declarations}
+
+\begin{bnf}
+  \gp{importdecl} \eq    \term{import} \ \term{\gp{id}} \gcomm{qualified import}
+                  \gorln \term{import} \ \term{\gp{id}} \ \term{as} \ \term{\gp{id}} \gcomm{qualified renamed import}
+\end{bnf}
+
+An \emph{import declaration}\index{item!import declaration} creates local name binding in current scope, synonymous with specified module. Exported items of imported module can be accessed using \emph{qualified identifier} syntax.
+
+Import declarations support two forms:
+
+\begin{description}
+  \item [Qualified import] \hfill \\
+    Binding target module to its name: \lstinline{import a}
+  \item [Qualified renamed import] \hfill \\
+    Binding target module to new local name: \lstinline{import a as b}
+\end{description}
+
+An import declaration declares a dependency relation between the importing and imported module. Modules may be mutually recursive, though module must not import itself, directly or indirectly.
+
+\begin{example}[Import declarations]
+\begin{lstlisting}
+import io
+import math as m
+
+fun main() {
+  f = io:open("result.txt", "w");
+  io:writeln(f, m:sin(m:pi));
 }
 \end{lstlisting}
 \end{example}
