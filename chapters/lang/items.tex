@@ -1,1 +1,76 @@
 \chapter{Items}
+
+This chapter describes syntax and informal semantics of Intentio items. An \emph{item}\index{item} is a component of a module. Items are uniquely named within module and are organized in flat structure.
+
+\begin{bnf}
+  \gd{itemdecl} \eq    \gp{fundecl}    \gcomm{function}
+                \gorln \gp{importdecl} \gcomm{import declaration}
+\end{bnf}
+
+\section{Functions}
+
+\begin{bnf}
+  \gd{fundecl} \eq \term{fun} \ \term{\gp{id}} \ \term{(} \ \gtry{\gp{funparams}} \ \term{)} \ \gp{braceblock} \\
+  \gd{funparams} \eq \term{\gp{id}} \ \gmany{ \ \term{,} \ \term{\gp{id}} \ } \ \gtry{\term{,}}
+\end{bnf}
+
+A \emph{function}\index{item!function} is a named block, along with optional set of parameters. Functions are declared with the keyword \lstinline{fun}. Function returns the result of evaluating of contained block. Functions may declare a set of input variables as parameters, through which the caller passes arguments into the function. Input variables behave the same as normal variables defined within function block.
+
+The number of function parameters $n$ is called the \emph{arity}\index{items!function arity} of the function.
+
+\begin{example}[Simple function]
+\begin{lstlisting}
+fun the_hardest_calculation(x) {
+  x * 2
+}
+\end{lstlisting}
+\end{example}
+
+\section{Import declarations}
+
+\begin{bnf}
+  \gp{importdecl} \eq \term{import} \ \gp{importspec} \\
+  \\
+  \gp{importspec} \eq    \term{\gp{id}} \gcomm{qualified import}
+                  \gorln \term{\gp{id}} \ \term{as} \ \term{\gp{id}} \gcomm{renamed qualified import}
+                  \gorln \term{\gp{id}} \ \term{:} \ \term{\gp{id}} \gcomm{item import}
+                  \gorln \term{\gp{id}} \ \term{:} \ \term{\gp{id}} \ \term{as} \ \term{\gp{id}} \gcomm{renamed item import}
+                  \gorln \term{\gp{id}} \ \term{:} \ \term{*} \gcomm{import-all}
+\end{bnf}
+
+An \emph{import declaration}\index{item!import declaration} creates local name binding in current scope, synonymous with specified module. Imports can import exported items directly into current scope or they can be \emph{qualified} where whole module is imported and exported items can be accessed using \emph{qualified identifier} syntax.
+
+Import declarations support five forms:
+
+\begin{description}
+  \item [Qualified import] \hfill \\
+    Binding target module to its name: \\
+    \lstinline{import a}
+  \item [Renamed qualified import] \hfill \\
+    Binding target module to new local name: \\
+    \lstinline{import a as b}
+  \item [Item import] \hfill \\
+    Binding exported item of target module to its name: \\
+    \lstinline{import a:x}
+  \item [Renamed item import] \hfill \\
+    Binding exported item of target module to new local name: \\
+    \lstinline{import a:x as y}
+  \item [Import-all] \hfill \\
+    Binding all exported items of target module to their names: \\
+    \lstinline{import a:*}
+\end{description}
+
+An import declaration declares a dependency relation between the importing and imported module. Modules may be mutually recursive, though module must not import itself, directly or indirectly.
+
+\begin{example}[Import declarations]
+\begin{lstlisting}
+import io
+import math:sin
+import math as m
+
+fun main() {
+  f = io:open("result.txt", "w");
+  io:writeln(f, sin(m:pi));
+}
+\end{lstlisting}
+\end{example}

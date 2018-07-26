@@ -1,20 +1,23 @@
-\chapter{Expressions}
+\chapter{Statements and expressions}
 
 This chapter describes syntax and semantics of Intentio \emph{expressions}. Intentio is an expression language. This means that all forms of result-producing or effect-causing evaluation fall into uniform syntax category of expressions. Usually each kind of expression can nest within each other kind of expression, and rules for evaluation of expressions involve specifying both the result produced by the expression and the order in which its sub-expressions are themselves evaluated.
 
-Intentio does not have a concept of \emph{statement} known from other programming languages.
+A \emph{statement}\index{statement} is either an assignment or expression. Statements serve mostly to encapsulate and explicitly sequence expression evaluation, forming \emph{blocks}. Evaluating \emph{expression statement}\index{statement!expression statement} means evaluating encapsulated expression.
 
 \begin{bnf}
-  \gd{expr} \eq    \gp{qidexpr}                        \gcomm{variable value or item}
-            \gorln \gp{literalexpr}                    \gcomm{literal expression}
-            \gorln \gp{blockexpr}                      \gcomm{block expression}
-            \gorln \gp{unopexpr}                       \gcomm{unary operator expression}
-            \gorln \gp{binopexpr}                      \gcomm{binary operator expression}
-            \gorln \term{(} \ \gp{expr} \ \term{)}     \gcomm{parenthesized expression}
-            \gorln \gp{callexpr}                       \gcomm{call expression}
-            \gorln \gp{loopexpr}                       \gcomm{loops}
-            \gorln \gp{ifexpr}                         \gcomm{conditionals}
-            \gorln \gp{returnexpr}                     \gcomm{return expression}
+  \gd{stmt} \eq    \gp{assign}  \gcomm{assignment statement}
+            \gorln \gp{expr}    \gcomm{expression statement} \\
+  \\
+  \gd{expr} \eq    \gp{idexpr}                      \gcomm{variable or item value expression}
+            \gorln \gp{literalexpr}                 \gcomm{literal expression}
+            \gorln \gp{blockexpr}                   \gcomm{block expression}
+            \gorln \gp{unopexpr}                    \gcomm{unary operator expression}
+            \gorln \gp{binopexpr}                   \gcomm{binary operator expression}
+            \gorln \term{(} \ \gp{expr} \ \term{)}  \gcomm{parenthesized expression}
+            \gorln \gp{callexpr}                    \gcomm{call expression}
+            \gorln \gp{whileexpr}                   \gcomm{while loop}
+            \gorln \gp{ifexpr}                      \gcomm{conditional expression}
+            \gorln \gp{returnexpr}                  \gcomm{return expression}
 \end{bnf}
 
 An \emph{expression}\index{expression} is an syntactic construct that \emph{evaluates} to a term. It may either \emph{succeed} or \emph{fail} resulting in a result. During the evaluation, expression may perform \emph{side effects}, for example it can mutate some state or perform execution jump. The meaning of each kind of expression dictates several things:
@@ -25,30 +28,236 @@ An \emph{expression}\index{expression} is an syntactic construct that \emph{eval
   \item How to combine the sub-expressions' results to obtain the result of the expression
 \end{itemize}
 
-\section{Variables and Items}
+\section{Assignment statement}
+
+% TODO: lvalues/rvalues or as in Rust: place and value expressions + describe them in value expressions. 'Assignable' trait?
+% https://doc.rust-lang.org/reference/expressions.html#place-expressions-and-value-expressions
+
+\begin{bnf}
+  \gd{assign} \eq \term{\gp{id}} \ \term{=} \ \gp{expr}  \gcomm{variable assignment}
+\end{bnf}
+
+An \emph{assignment statement}\index{statement!assignment statement} mutates already declared variable, or declares new variable in current scope.
+
+\section{Variable or item value expressions}
+
+\begin{bnf}
+  \gd{idexpr} \eq \term{\gp{qid}} \gor \term{\gp{id}}
+\end{bnf}
+
+An identifier or qualified identifier used in expression context\index{expression!identifier} denotes either local variable or declared item.
 
 \section{Literal expressions}
+
+\begin{bnf}
+  \gd{literalexpr} \eq \term{\gp{literal}}
+\end{bnf}
+
+A \emph{literal expression}\index{expression!literal expression} consists of one of the literal tokens. It directly describes a number or string.
+
+Literals in Intentio are always immutable, it is not possible to change value of the literal in-place.
 
 \section{Block expressions}
 
 \begin{bnf}
-  \gd{blockexpr} \eq \gp{braceblock}   \gcomm{block expression} \\
-  \gd{block} \eq \gp{braceblock}       \gcomm{block used as part of other expressions} \\
+  \gd{blockexpr} \eq \gp{braceblock} \\
   \\
-  \gd{braceblock} \eq \term{\{} \ \gmany{\gp{expr} \ \term{;}} \ \term{\}}
+  \gd{braceblock} \eq \term{\{} \ \gtry{\gp{blockbody}} \ \term{\}} \\
+  \gd{parenblock} \eq \term{(} \ \gp{blockbody} \ \term{)} \\
+  \\
+  \gd{blockbody} \eq \gmany{ \ \gp{stmt} \ \term{;} \ } \ \gp{expr} \ \gtry{\term{;}}
 \end{bnf}
 
-A \emph{block expression}\index{block expression} is a possibly empty sequence of expressions. Each block introduces a new namespace scope, this means that variables introduced within block are in scope for only the block itself.
+A \emph{block expression}\index{expression!block expression} is a sequence of statements, followed by an expression. Each block introduces a new namespace scope, this means that variables introduced within block are in scope for only the block itself.
 
-Block evaluates expressions sequentially while each expression evaluates successfully. On first failing expression, block stops evaluation and its result is equal to the result of failing expression. Otherwise, if all expressions succeeded, block evaluates to result of last expression. If block is empty, its result is a \emph{unit}.
+Block evaluates statements sequentially while each statement evaluates successfully. On first failing statement, block stops evaluation and its result is equal to the result of failing statement. Otherwise, if all statements succeeded, block evaluates to result of the last expression. If block is empty, its result is a succeeded \emph{unit} term.
 
-\section{Operator expressions}
+\section{Operator expressions}\index{expression!operator expression}
+
+\begin{bnf}
+  \gd{unopexpr} \eq \gp{negexpr} \gor \gp{notexpr} \\
+  \gd{binopexpr} \eq \gp{arithexpr} \gor \gp{cmpexpr} \gor \gp{boolexpr} \\
+  \\
+  \gd{negexpr} \eq \term{-} \ \gp{expr} \\
+  \gd{notexpr} \eq \term{not} \ \gp{expr} \\
+  \\
+  \gd{arithexpr} \eq    \gp{expr} \ ( \ \term{+} \gor \term{-} \ ) \ \gp{expr}
+                 \gorln \gp{expr} \ ( \ \term{*} \gor \term{/} \ ) \ \gp{expr} \\
+  \\
+  \gd{cmpexpr} \eq \gp{expr} \ \gp{cmpop} \ \gp{expr} \\
+  \gd{cmpop}   \eq \term{==} \gor \term{!=} \gor \term{<} \gor \term{>} \gor \term{<=} \gor \term{>=} \gor \term{===} \gor \term{!==} \\
+  \\
+  \gd{boolexpr} \eq    \gp{expr} \ \term{or} \ \gp{expr}
+                \gorln \gp{expr} \ \term{and} \ \gp{expr}
+\end{bnf}
+
+\begin{bnfutils}
+\begin{table}[ht]
+  \caption{Operator precedence}
+  \begin{center}
+  \begin{tabular}[t]{c|l|c}
+    \bfseries{Precedence} & \multicolumn{1}{c|}{\bfseries{Operators}} & \bfseries{Associativity} \\
+    \hline
+    6 & \term{-x}, \term{not x} & right-to-left \\
+    5 & \term{*}, \term{/} & left-to-right \\
+    4 & \term{+}, \term{-} & left-to-right \\
+    3 & \term{==}, \term{!=}, \term{<}, \term{>}, \term{<=}, \term{>=}, \term{===}, \term{!==} & left-to-right \\
+    2 & \term{and} & left-to-right \\
+    1 & \term{or} & left-to-right
+  \end{tabular}
+  \end{center}
+\end{table}
+\end{bnfutils}
+
+\subsection{Arithmetic operators}
+
+Arithmetic operators apply to numeric terms (and, rarely, strings). Evaluating arithmetic operations always succeeds, behaviour in erroneous situations (such as division by zero) is described below. Following table lists all arithmetic operations, along with essential properties.
+
+\begin{bnfutils}
+\begin{table}[ht]
+  \caption{Arithmetic operators}
+  \begin{center}
+  \begin{tabular}[t]{c|l|l}
+    \bfseries{Operator} & \bfseries{Meaning} & \bfseries{Applies to types} \\
+    \hline
+    \term{-x} & negation & integers, floats \\
+    \term{+} & sum & integers, floats, strings \\
+    \term{-} & difference & integers, floats \\
+    \term{*} & product & integers, floats \\
+    \term{/} & quotient & integers, floats
+  \end{tabular}
+  \end{center}
+\end{table}
+\end{bnfutils}
+
+\subsubsection{Negation}
+
+For integer and floating-point operand terms, the \lstinline{-x} operator is defined as follows. Term type is not changed during evaluation.
+
+\begin{lstlisting}
+-x === 0 - x
+\end{lstlisting}
+
+\subsubsection{Integer and floating-point binary operations}
+
+For \lstinline{+}, \lstinline{-}, \lstinline{*} and \lstinline{/} operators, following typing rules hold:
+
+\begin{lstlisting}
+Int + Int -> Int
+Float + Float -> Float
+Float + Int -> Float        # == Float + Float(Int)
+Int + Float -> Float        # == Float(Int) + Float
+\end{lstlisting}
+
+\subsubsection{String concatenation}
+
+Strings can be concatenated using \lstinline{+} operator. Following typing rules hold:
+
+\begin{lstlisting}
+String + String -> String   # concatenate two strings
+Char + String -> String     # prepend char to string
+String + Char -> String     # append char to string
+\end{lstlisting}
+
+\subsection{Term comparison operators}
+
+Comparison operators compare two operands and yield either success if comparison passed, or failure.
+
+\begin{bnfutils}
+\begin{table}[ht]
+  \caption{Term comparison operators}
+  \begin{center}
+  \begin{tabular}[t]{c|l}
+    \bfseries{Operator} & \bfseries{Meaning} \\
+    \hline
+    \term{==} & equal to \\
+    \term{!=} & not equal to \\
+    \term{<} & less than \\
+    \term{>} & greater than \\
+    \term{<=} & less than or equal to \\
+    \term{>=} & greater than or equal to \\
+    \term{===} & strict equal to \\
+    \term{!==} & strict not equal to
+  \end{tabular}
+  \end{center}
+\end{table}
+\end{bnfutils}
+
+In Intentio, arguments of comparison operators can be of any type. The following total ordering among types is defined:
+
+\begin{lstlisting}
+Number (Int or Float) < Char < String < Regex
+\end{lstlisting}
+
+Integers are comparable with integers in usual way. Floating-point numbers are comparable with floating-point numbers according to IEEE-754\cite{IEEE754} rules. For \lstinline{===} and \lstinline{!==} operators comparing integer to floating-point number (and vice-versa) always fails, otherwise integer is converted to float before comparison.
+
+Characters are compared using their byte representation. Strings and regular expressions are compared character by character. For \lstinline{===} and \lstinline{!==} operators comparisons between characters, strings and regular expressions always fail, otherwise characters and regular expressions are always converted to strings before \lstinline{==} and \lstinline{!=} comparison.
+
+TODO(Ania): which term is returned?
+
+\subsection{Result operators}
+
+TODO(Ania): not, and, or
+
+\subsection{Typing errors}
+
+Not all typing rules are defined, and hence using of undefined combinations is prohibited. Evaluating such expressions results in run-time type error panic.
+
+Example erroneous situations: \lstinline{Char + Char}, \lstinline{Regex + Regex}, \lstinline{String + Regex}.
+
+\subsection{Division by zero}
+
+For integer operands, division by zero results in run-time panic. The result of a floating-point division by zero is not specified beyond the IEEE-754\cite{IEEE754} standard; whether a run-time panic occurs is implementation-specific.
+
+\subsection{Integer overflow}
+
+Operators \lstinline{+}, \lstinline{-}, \lstinline{*} and \lstinline{/} may legally overflow, resulting value exists and is deterministically defined by the signed integer representation on destination architecture, the operation, and its operands. Evaluation is not failing nor no panic is triggered as a result of overflow. Intentio compiler may not optimize code under the assumption that overflow does not occur.
 
 \section{Call expressions}
 
+\begin{bnf}
+  \gd{callexpr} \eq \gp{expr} \ \term{(} \ \gtry{\gp{callargs}} \ \term{)} \\
+  \gd{callargs} \eq \gp{expr} \ \gmany{ \ \term{,} \ \gp{expr} \ } \ \gtry{\term{,}}
+\end{bnf}
+
+A \emph{call expression}\index{expression!call expression} is made of an expression followed by a parenthesized, comma separated expression list. It invokes a function, providing zero or more arguments, evaluating to result of function invocation (either succeeded return term, or failure). If evaluation of any of function arguments fails, then function is not called, and instead whole expression yields argument failure.
+
+\begin{example}[Trivial call expression]
+\begin{lstlisting}
+y = add(3, 4)
+\end{lstlisting}
+\end{example}
+
+\begin{example}[Calling arbitrary expressions]
+\begin{lstlisting}[mathescape=true]
+fun f(x) { x * 2; }
+fun g() { f; }
+
+y = g()(5); # works same as y = f(5)
+y == 10;
+\end{lstlisting}
+\end{example}
+
 \section{Loops}
 
+\begin{bnf}
+  \gd{whileexpr} \eq \term{while} \ ( \ \gp{parenblock} \gor \gp{expr} \ ) \ \gp{braceblock}
+\end{bnf}
+
+A \emph{while loop}\index{expression!while loop} begins by evaluating loop condition block/expression. If evaluating loop condition succeeds, the loop body block executes. If the condition fails, then while loop completes and returns succeeded unit term. The result value of condition block is ignored.
+
+TODO(Ania): Example
+
 \section{Conditionals}
+
+\begin{bnf}
+  \gd{ifexpr} \eq \term{if} \ ( \ \gp{parenblock} \gor \gp{expr} \ ) \ \gp{braceblock} \\
+              & & \gtry{ \ \term{else} \ ( \ \gp{braceblock} \gor \gp{ifexpr} \ ) \ }
+\end{bnf}
+
+A \emph{conditional expression}\index{expression!conditional expression} is a conditional branch in program control. Conditional expression is made of a condition block/expression, followed by a consequent block, any number of alternative conditions and blocks, and an optional trailing final alternative block. If a condition expression evaluates successfully, the consequent block is executed and any subsequent \lstinline{else if} or \lstinline{else} block is skipped. If a condition expression evaluation fails, the consequent block is skipped and any subsequent else if condition is evaluated. If all condition blocks fails then \lstinline{else} block is executed. Result values of conditions in condition block are ignored. Conditional expression evaluates to the same value as the executed block, or succeeded unit if no block is evaluated.
+
+TODO(Ania): Example
 
 \section{Return expressions}
 
@@ -56,7 +265,7 @@ Block evaluates expressions sequentially while each expression evaluates success
   \gd{returnexpr} \eq \term{return} \ \gtry{\gp{expr}}
 \end{bnf}
 
-A \emph{return expression}\index{return expression} terminates execution of enclosing function, making it return the result of evaluating provided expression. In case no expression is given, a \emph{unit} is returned.
+A \emph{return expression}\index{expression!return expression} terminates execution of enclosing function, making it return the result of evaluating provided expression. In case no expression is given, a \emph{unit} is returned.
 
 \begin{example}[Return expression]
 \begin{lstlisting}

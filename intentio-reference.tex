@@ -12,6 +12,7 @@
 \usepackage{makeidx}
 \usepackage{mathtools}
 \usepackage{url}
+\usepackage{xcolor}
 
 \usepackage{intentio-macros}
 
@@ -63,22 +64,20 @@
 \part{The Intentio Language}
 \include{chapters/lang/introduction}
 \include{chapters/lang/lexical-structure}
-\include{chapters/lang/expressions}
-\include{chapters/lang/items}
 \include{chapters/lang/modules-assemblies}
-
-\part{The Intentio Standard Library}
-\include{chapters/stdlib/introduction}
+\include{chapters/lang/items}
+\include{chapters/lang/expressions}
 
 \appendix
 
+\part{Appendices}
 \include{chapters/appendices/influences}
 
 \backmatter
 
 \clearpage
 \addcontentsline{toc}{chapter}{Bibliography}
-\bibliographystyle{abbrv}
+\bibliographystyle{plain}
 \bibliography{bibliography}
 
 \clearpage
