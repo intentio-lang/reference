@@ -91,10 +91,12 @@ Additionally:
         \gor   \term{or}
         \gor   \term{return}
         \gor   \term{struct}
+        \gor   \term{succ}
         \gor   \term{trait}
         \gor   \term{type}
-        \gor   \term{while}
-        \gorln \term{yield}
+        \gorln \term{while}
+        \gor   \term{xor}
+        \gor   \term{yield}
         \gor   \term{\_} \\
   \\
   \gd{operator} \eq
@@ -158,7 +160,7 @@ A \emph{white space}\index{white space} is a non-empty sequence of white space c
              \gorln \gp{decimal} \ \gp{exponent}
 \end{bnf}
 
-A \emph{numeric literal}\index{literal!numeric literal} is either an \emph{integer literal}\index{literal!numeric literal!integer literal} or \emph{floating-point literal}\index{literal!numeric literal!floating-point literal}. Integer literals may be given in decimal (the default), binary (prefixed by \texttt{0b} or \texttt{0B}), octal (prefixed by \texttt{0o} or \texttt{0O}) or hexadecimal notation (prefixed by \texttt{0x} or \texttt{0X}). Floating-point literals are always decimal. A floating literal must contain digits both before and after the decimal point. A "\texttt{\_}" character is allowed inside numeric literals for visual separation of digit groups, for instance \lstinline{476_981__109_528_} is equal to \lstinline{476981109528}. Negative numeric literals are described grammatically, not lexically.
+A \emph{numeric literal}\index{literal!numeric literal} is either an \emph{integer literal}\index{literal!numeric literal!integer literal} or \emph{floating-point literal}\index{literal!numeric literal!floating-point literal}. Integer literals may be given in decimal (the default), binary (prefixed by \texttt{0b} or \texttt{0B}), octal (prefixed by \texttt{0o} or \texttt{0O}) or hexadecimal (prefixed by \texttt{0x} or \texttt{0X}) notation. Floating-point literals are always decimal. A floating literal must contain digits both before and after the decimal point. A "\texttt{\_}" character is allowed inside numeric literals for visual separation of digit groups, for instance \lstinline{476_981__109_528_} is equal to \lstinline{476981109528}. Negative numeric literals are described grammatically, not lexically.
 
 \subsection{String Literals}
 

@@ -84,6 +84,8 @@ A \((value, type)\) pair is called a \emph{term}\index{term}. Terms represent da
 
 Evaluating expressions may either succeed or fail. A tagged union of successfully evaluated result or failure with information describing what failed is called a \emph{result}\index{result}. Terms and results are the basic blocks of representing information in Intentio.
 
+There is also a special subgroup of results named  \emph{unit}\index{unit}. It is characterized by content of term. Tho both \emph{value} and \emph{type} are set to word \emph{unit}.
+
 Following Haskell-style code listing describes relationships between these concepts:
 
 \begin{lstlisting}[language=Haskell]
@@ -94,6 +96,9 @@ Following Haskell-style code listing describes relationships between these conce
 
   data Result = Succ Term
               | Fail Term
+
+  data UnitResult = Succ (unit, unit)
+              | Fail (unit, unit)
 \end{lstlisting}
 
 
@@ -118,7 +123,7 @@ There are no constraints on names belonging to particular namespace, therefore i
   \term{\gd{UTF8BOM}} \eq \term{\textbackslash u\{EFBBBF\}} \gcomm{UTF-8 Byte Order Mark}
 \end{bnf}
 
-An Intentio source file describes single module, the name of which is defined by source file name. Source files have extension \lstinline{.int}. File name \lstinline{example.int} defines module named \lstinline{example}.
+An Intentio source file describes single module, the name of which is defined by source file name. Source files have extension \lstinline{.ieo}. File name \lstinline{example.int} defines module named \lstinline{example}.
 
 \begin{bnfutils}
 Intentio source files must always be encoded in UTF8. The optional UTF8 byte order mark (lexical \term{UTF8BOM} production) can only occur at the beginning of the file and must be ignored by the parser.

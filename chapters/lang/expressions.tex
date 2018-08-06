@@ -10,7 +10,7 @@ A \emph{statement}\index{statement} is either an assignment or expression. State
   \\
   \gd{expr} \eq    \gp{idexpr}                      \gcomm{variable or item value expression}
             \gorln \gp{literalexpr}                 \gcomm{literal expression}
-            \gorln \gp{blockexpr}                   \gcomm{block expression}
+            \gorln \gp{braceblockexpr}              \gcomm{block expression}
             \gorln \gp{unopexpr}                    \gcomm{unary operator expression}
             \gorln \gp{binopexpr}                   \gcomm{binary operator expression}
             \gorln \term{(} \ \gp{expr} \ \term{)}  \gcomm{parenthesized expression}
@@ -63,15 +63,16 @@ Literals in Intentio are always immutable, it is not possible to change value of
   \gd{blockexpr} \eq \gp{braceblock} \\
   \\
   \gd{braceblock} \eq \term{\{} \ \gtry{\gp{blockbody}} \ \term{\}} \\
-  \gd{parenblock} \eq \term{(} \ \gp{blockbody} \ \term{)} \\
+  \gd{parenblock} \eq \term{(} \ \gtry{\gp{blockbody}} \ \term{)} \\
   \\
   \gd{blockbody} \eq \gmany{ \ \gp{stmt} \ \term{;} \ } \ \gp{expr} \ \gtry{\term{;}}
 \end{bnf}
 
-A \emph{block expression}\index{expression!block expression} is a sequence of statements, followed by an expression. Each block introduces a new namespace scope, this means that variables introduced within block are in scope for only the block itself.
+A \emph{block expression}\index{expression!block expression} is an optional sequence of statements, followed by an expression. Each block introduces a new namespace scope, this means that variables introduced within block are in scope for only the block itself.
 
-Block evaluates statements sequentially while each statement evaluates successfully. On first failing statement, block stops evaluation and its result is equal to the result of failing statement. Otherwise, if all statements succeeded, block evaluates to result of the last expression. If block is empty, its result is a succeeded \emph{unit} term.
+Parenblock evaluates statements sequentially while each statement evaluates successfully. On first failing statement, block stops evaluation and its result is equal to the result of failing statement. Otherwise, if all statements succeeded, block evaluates to result of the last expression. If block is empty, its result is a succeeded \emph{unit} term.
 
+Braceblock also evaluates statements sequentially, but it do not stop to evaluate statements even if some of them fails. Its result is always equal to to the result of last expression.
 \section{Operator expressions}\index{expression!operator expression}
 
 \begin{bnf}
@@ -145,8 +146,8 @@ For \lstinline{+}, \lstinline{-}, \lstinline{*} and \lstinline{/} operators, fol
 \begin{lstlisting}
 Int + Int -> Int
 Float + Float -> Float
-Float + Int -> Float        # == Float + Float(Int)
-Int + Float -> Float        # == Float(Int) + Float
+Float + Int -> Float       # == Float + Float(Int)
+Int + Float -> Float       # == Float(Int) + Float
 \end{lstlisting}
 
 \subsubsection{String concatenation}
@@ -154,9 +155,10 @@ Int + Float -> Float        # == Float(Int) + Float
 Strings can be concatenated using \lstinline{+} operator. Following typing rules hold:
 
 \begin{lstlisting}
-String + String -> String   # concatenate two strings
-Char + String -> String     # prepend char to string
-String + Char -> String     # append char to string
+Char + Char -> String      # String(Char) + String(Char)
+String + String -> String  # concatenate two Strings
+Char + String -> String    # prepend Char to String
+String + Char -> String    # append Char to String
 \end{lstlisting}
 
 \subsection{Term comparison operators}
@@ -193,17 +195,63 @@ Integers are comparable with integers in usual way. Floating-point numbers are c
 
 Characters are compared using their byte representation. Strings and regular expressions are compared character by character. For \lstinline{===} and \lstinline{!==} operators comparisons between characters, strings and regular expressions always fail, otherwise characters and regular expressions are always converted to strings before \lstinline{==} and \lstinline{!=} comparison.
 
-TODO(Ania): which term is returned?
+No matter what comparsion was made, its result consist term copied from the second arggument.
 
 \subsection{Result operators}
 
-TODO(Ania): not, and, or
+Result operators are used to made logical expressions, such as conjunction, alternative, xor and negation. Their actions are analogous to those from which they took their name in classical mathematics.
+
+The following tables present the exact results for each set of function arguments. The descriptions in the left column correspond to the first argument, while those in the top column - to the second. The results term is copied from second argument.
+
+\begin{bnfutils}
+  \begin{table}[ht]
+    \caption{\emph{and}}
+    \begin{center}
+    \begin{tabular}[t]{r|r|r}
+       & Succ Term2 & Fail Term2 \\
+      \hline
+      Succ Term1 & Succ Term2 & Fail Term2 \\
+      Fail Term1 & Fail Term2 & Fail Term2 
+    \end{tabular}
+    \end{center}
+  \end{table}
+  \end{bnfutils}
+
+  \begin{bnfutils}
+    \begin{table}[ht]
+      \caption{\emph{or}}
+      \begin{center}
+      \begin{tabular}[t]{r|r|r}
+         & Succ Term2 & Fail Term2 \\
+        \hline
+        Succ Term1 & Succ Term2 & Succ Term2 \\
+        Fail Term1 & Succ Term2 & Fail Term2 
+      \end{tabular}
+      \end{center}
+    \end{table}
+    \end{bnfutils}
+
+    \begin{bnfutils}
+      \begin{table}[ht]
+        \caption{\emph{xor}}
+        \begin{center}
+        \begin{tabular}[t]{r|r|r}
+           & Succ Term2 & Fail Term2 \\
+          \hline
+          Succ Term1 & Fail Term2 & Succ Term2 \\
+          Fail Term1 & Succ Term2 & Fail Term2 
+        \end{tabular}
+        \end{center}
+      \end{table}
+      \end{bnfutils}
+
+For \emph{not} operator the result has the same term as argument, but its Succ is changed to Fail and vice versa.
 
 \subsection{Typing errors}
 
 Not all typing rules are defined, and hence using of undefined combinations is prohibited. Evaluating such expressions results in run-time type error panic.
 
-Example erroneous situations: \lstinline{Char + Char}, \lstinline{Regex + Regex}, \lstinline{String + Regex}.
+Example erroneous situations: \lstinline{Regex + Regex}, \lstinline{String + Regex}.
 
 \subsection{Division by zero}
 
@@ -246,7 +294,23 @@ y == 10;
 
 A \emph{while loop}\index{expression!while loop} begins by evaluating loop condition block/expression. If evaluating loop condition succeeds, the loop body block executes. If the condition fails, then while loop completes and returns succeeded unit term. The result value of condition block is ignored.
 
-TODO(Ania): Example
+\begin{example}[Trivial while expression]
+  \begin{lstlisting}
+      let i = 0;
+      while i < 8 {
+        i = i + 3;
+      }
+  \end{lstlisting}
+  \end{example}
+
+\begin{example}[Trivial while expression with parenthesies]
+\begin{lstlisting}
+  while (i < 8; a < 20; i = i + 1) {
+    println(i);
+    a = a + 1;
+  }
+\end{lstlisting}
+\end{example}
 
 \section{Conditionals}
 
@@ -257,7 +321,30 @@ TODO(Ania): Example
 
 A \emph{conditional expression}\index{expression!conditional expression} is a conditional branch in program control. Conditional expression is made of a condition block/expression, followed by a consequent block, any number of alternative conditions and blocks, and an optional trailing final alternative block. If a condition expression evaluates successfully, the consequent block is executed and any subsequent \lstinline{else if} or \lstinline{else} block is skipped. If a condition expression evaluation fails, the consequent block is skipped and any subsequent else if condition is evaluated. If all condition blocks fails then \lstinline{else} block is executed. Result values of conditions in condition block are ignored. Conditional expression evaluates to the same value as the executed block, or succeeded unit if no block is evaluated.
 
-TODO(Ania): Example
+\begin{example}[Trivial if expression]
+\begin{lstlisting}
+  if a < b { c = a } 
+\end{lstlisting}
+\end{example}
+
+The variables definied in condition could be used in ifbraceblock and elsebraceblock as it was the same scope.
+
+\begin{example}[Trivial if expression with else (version1)]
+\begin{lstlisting}
+    if (let a = 3; a < b) { c = a } 
+    else { c = b }
+\end{lstlisting}
+\end{example}
+
+\begin{center}
+  which is equivalet to
+\end{center}
+
+\begin{example}[Trivial if expression with else (version2)]
+  \begin{lstlisting}
+      if (let a = 3; c = b; a < b) { c = a } 
+  \end{lstlisting}
+  \end{example}
 
 \section{Return expressions}
 
