@@ -1,6 +1,6 @@
 \chapter{Items}
 
-This chapter describes syntax and informal semantics of Intentio items. An \emph{item}\index{item} is a component of a module. Items are uniquely named within module and are organized in flat structure.
+This chapter describes the syntax and informal semantics of Intentio items. An \emph{item}\index{item} is a component of a module. Items are uniquely named within the module and are organized in the flat structure.
 
 \begin{bnf}
   \gd{itemdecl} \eq    \gp{fundecl}    \gcomm{function}
@@ -14,7 +14,7 @@ This chapter describes syntax and informal semantics of Intentio items. An \emph
   \gd{funparams} \eq \term{\gp{expr}} \ \gmany{ \ \term{,} \ \term{expr} \ \term{\gp{expr}} \ } \ \gtry{\term{,}}
 \end{bnf}
 
-A \emph{function}\index{item!function} is a named block, along with optional set of parameters. Functions are declared with the keyword \lstinline{fun}. If keyword \emph{return} is not used, function returns the result of evaluating last expression from contained block. Functions may declare a set of input variables as parameters, through which the caller passes arguments into the function. Input variables behave the same as normal variables defined within function block.
+A \emph{function}\index{item!function} is a named block, along with optional set of parameters. Functions are declared with the keyword \lstinline{fun}. If keyword \emph{return} is not used, the function returns the result of evaluating the last expression from the contained block. Functions may declare a set of input variables as parameters, through which the caller passes arguments into the function. Input variables behave the same as normal variables defined within a function block.
 
 A keyword \lstinline{expr} before argument means that it would be evaluated. If it fails, the function will not be executed and return fail unit term.
 
@@ -40,7 +40,7 @@ fun the_hardest_calculation(x) {
                   \gorln \term{\gp{id}} \ \term{:} \ \term{*} \gcomm{import-all}
 \end{bnf}
 
-An \emph{import declaration}\index{item!import declaration} creates local name binding in current scope, synonymous with specified module. Imports can import exported items directly into current scope or they can be \emph{qualified} where whole module is imported and exported items can be accessed using \emph{qualified identifier} syntax.
+An \emph{import declaration}\index{item!import declaration} creates local name binding in the current scope, synonymous with the specified module. Imports can import exported items directly into current scope or they can be \emph{qualified} where the whole module is imported and exported items can be accessed using \emph{qualified identifier} syntax.
 
 Import declarations support five forms:
 

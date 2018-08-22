@@ -27,7 +27,7 @@ If an UTF-8-encoded byte order mark (U+FEFF) is the first Unicode code point in 
 
 \section{Special Lexical Productions}
 
-Following productions define Unicode character sets which are used to define non pure ASCII productions. These productions do not have any semantic meaning themselves.
+Following productions define Unicode character sets which are used to define non-pure ASCII productions. These productions do not have any semantic meaning themselves.
 
 \begin{bnfutils}
 \begin{itemize}
@@ -121,11 +121,11 @@ Additionally:
          \gorln \term{=}
 \end{bnf}
 
-An \emph{identifier}\index{identifier} consists of a "letter" or underscore followed by zero or more letters, digits, underscores, and single quotes. Simple, unqualified identifiers (\(id\)) are always resolved within current module and scope. In order to be able to specify which module identifier belongs to, in most places identifier may be prefixed with module name and "\texttt{:}" character to form a \emph{qualified identifier}\index{identifier!qualified identifier} (\(qid\)).
+An \emph{identifier}\index{identifier} consists of a "letter" or underscore followed by zero or more letters, digits, underscores, and single quotes. Simple, unqualified identifiers (\(id\)) are always resolved within current module and scope. In order to be able to specify which module identifier belongs to, in most places identifier may be prefixed with the module name and "\texttt{:}" character to form a \emph{qualified identifier}\index{identifier!qualified identifier} (\(qid\)).
 
-\emph{Keywords}\index{keyword} are identifier-like tokens which have special meaning in the grammar, all of them are excluded from the \(id\) rule. \emph{Operators}\index{operator} are another special tokens, these ones are formed from symbol characters. \(keyword\) and \(operator\) productions have no use in Intentio grammar definition, instead particular tokens are used.
+\emph{Keywords}\index{keyword} are identifier-like tokens which have special meaning in the grammar, all of them are excluded from the \(id\) rule. \emph{Operators}\index{operator} are another special tokens, these ones are formed from symbol characters. \(keyword\) and \(operator\) productions have no use in Intentio grammar definition, instead, particular tokens are used.
 
-Implementations that offer lints or warnings for unused parameters/variables/items are encouraged to suppress such warnings for identifiers beginning with underscore. This allows programmers to use \texttt{\_arg} for a parameter that they expect to be unused.
+Implementations that offer hints or warnings for unused parameters/variables/items are encouraged to suppress such warnings for identifiers beginning with an underscore. This allows programmers to use \texttt{\_arg} for a parameter that they expect to be unused.
 
 \section{Comments and White space}
 
@@ -222,7 +222,7 @@ A \emph{regular expression literal}\index{literal!string literal!regular express
 
 A \emph{string literal modifier}\index{literal!string literal!modifier} is a special flag that, when enabled, adds a step of processing of the literal value before compiling it to Intentio term. The order of modifiers is respected, they are processed from left-most modifier to right-most one.
 
-Because modifiers alter literal contents before its compiling, they can fundamentally change their meaning, for instance the literal \lstinline{tc"   x   "} should successfully compile and evaluate to single character "\texttt{x}", while \lstinline{ct"   x   "} would report an error becouse there is not possible to make character from a multi-letter string.
+Because modifiers alter literal contents before its compiling, they can fundamentally change their meaning, for instance the literal \lstinline{tc"   x   "} should successfully compile and evaluate to single character "\texttt{x}", while \lstinline{ct"   x   "} would report an error because there is not possible to make character from a multi-letter string.
 
 Intentio provides following modifiers:
 
