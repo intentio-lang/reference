@@ -70,9 +70,9 @@ Literals in Intentio are always immutable, it is not possible to change the valu
 
 A \emph{block expression}\index{expression!block expression} is an optional sequence of statements, followed by an expression. Each block introduces a new namespace scope, this means that variables introduced within a block are in scope for only the block itself.
 
-Parenblock evaluates statements sequentially while each statement evaluates successfully. On the first failing statement, the block stops evaluation and its result is equal to the result of the failing statement. Otherwise, if all statements succeeded, the block evaluates to result of the last expression. If the block is empty, its result is a succeeded \emph{unit} term.
+A parenthesized block evaluates statements sequentially while each statement evaluates successfully. On the first failing statement, the block stops evaluation and its result is equal to the result of the failing statement. Otherwise, if all statements succeeded, the block evaluates to result of the last expression. If the block is empty, its result is a succeeded \emph{unit} term.
 
-Braceblock also evaluates statements sequentially, but it does not stop to evaluate statements even if some of them fails. Its result is always equal to the result of the last expression.
+A braced block also evaluates statements sequentially, but it does not stop to evaluate statements even if some of them fails. Its result is always equal to the result of the last expression.
 \section{Operator expressions}\index{expression!operator expression}
 
 \begin{bnf}
@@ -155,7 +155,7 @@ Int + Float -> Float       # == Float(Int) + Float
 Strings can be concatenated using \lstinline{+} operator. Following typing rules hold:
 
 \begin{lstlisting}
-Char + Char -> String      # String(Char) + String(Char)
+Char + Char -> String      # concatenate two Chars making a String
 String + String -> String  # concatenate two Strings
 Char + String -> String    # prepend Char to String
 String + Char -> String    # append Char to String
@@ -207,7 +207,7 @@ The following tables present the exact results for each set of function argument
   \begin{table}[ht]
     \caption{\emph{and}}
     \begin{center}
-    \begin{tabular}[t]{r|r|r}
+    \begin{tabular}[t]{l|l|l}
        & Succ Term2 & Fail Term2 \\
       \hline
       Succ Term1 & Succ Term2 & Fail Term2 \\
@@ -215,37 +215,47 @@ The following tables present the exact results for each set of function argument
     \end{tabular}
     \end{center}
   \end{table}
-  \end{bnfutils}
+\end{bnfutils}
 
-  \begin{bnfutils}
-    \begin{table}[ht]
-      \caption{\emph{or}}
-      \begin{center}
-      \begin{tabular}[t]{r|r|r}
-         & Succ Term2 & Fail Term2 \\
-        \hline
-        Succ Term1 & Succ Term2 & Succ Term2 \\
-        Fail Term1 & Succ Term2 & Fail Term2 
-      \end{tabular}
-      \end{center}
-    \end{table}
-    \end{bnfutils}
+\begin{bnfutils}
+  \begin{table}[ht]
+    \caption{\emph{or}}
+    \begin{center}
+    \begin{tabular}[t]{l|l|l}
+        & Succ Term2 & Fail Term2 \\
+      \hline
+      Succ Term1 & Succ Term2 & Succ Term2 \\
+      Fail Term1 & Succ Term2 & Fail Term2 
+    \end{tabular}
+    \end{center}
+  \end{table}
+\end{bnfutils}
 
-    \begin{bnfutils}
-      \begin{table}[ht]
-        \caption{\emph{xor}}
-        \begin{center}
-        \begin{tabular}[t]{r|r|r}
-           & Succ Term2 & Fail Term2 \\
-          \hline
-          Succ Term1 & Fail Term2 & Succ Term2 \\
-          Fail Term1 & Succ Term2 & Fail Term2 
-        \end{tabular}
-        \end{center}
-      \end{table}
-      \end{bnfutils}
+\begin{bnfutils}
+  \begin{table}[ht]
+    \caption{\emph{xor}}
+    \begin{center}
+    \begin{tabular}[t]{l|l|l}
+        & Succ Term2 & Fail Term2 \\
+      \hline
+      Succ Term1 & Fail Term2 & Succ Term2 \\
+      Fail Term1 & Succ Term2 & Fail Term2 
+    \end{tabular}
+    \end{center}
+  \end{table}
+\end{bnfutils}
 
-For \emph{not} operator the result has the same term as the argument, but its Succ is changed to Fail and vice versa.
+\begin{bnfutils}
+  \begin{table}[!htbp]
+    \caption{\emph{not}}
+    \begin{center}
+    \begin{tabular}[t]{l|l}
+      Succ Term & Succ Term \\
+      Fail Term & Fail Term 
+    \end{tabular}
+    \end{center}
+  \end{table}
+\end{bnfutils}
 
 \subsection{Typing errors}
 
@@ -294,20 +304,11 @@ y == 10;
 
 A \emph{while loop}\index{expression!while loop} begins by evaluating loop condition block/expression. If evaluating loop condition succeeds, the loop body block executes. If the condition fails, then while loop completes and returns succeeded unit term. The result value of condition block is ignored.
 
-\begin{example}[Trivial while expression]
-  \begin{lstlisting}
-      let i = 0;
-      while i < 8 {
-        i = i + 3;
-      }
-  \end{lstlisting}
-  \end{example}
-
-\begin{example}[Trivial while expression with parenthesies]
+\begin{example}[While expression with parentheses]
 \begin{lstlisting}
-  while (i < 8; a < 20; i = i + 1) {
+  let i = 0;
+  while (i < 8; i = i + 1) {
     println(i);
-    a = a + 1;
   }
 \end{lstlisting}
 \end{example}
