@@ -160,7 +160,7 @@ A \emph{white space}\index{white space} is a non-empty sequence of white space c
              \gorln \gp{decimal} \ \gp{exponent}
 \end{bnf}
 
-A \emph{numeric literal}\index{literal!numeric literal} is either an \emph{integer literal}\index{literal!numeric literal!integer literal} or \emph{floating-point literal}\index{literal!numeric literal!floating-point literal}. Integer literals may be given in decimal (the default), binary (prefixed by \texttt{0b} or \texttt{0B}), octal (prefixed by \texttt{0o} or \texttt{0O}) or hexadecimal (prefixed by \texttt{0x} or \texttt{0X}) notation. Floating-point literals are always decimal. A floating literal must contain digits both before and after the decimal point. A "\texttt{\_}" character is allowed inside numeric literals for visual separation of digit groups, for instance \lstinline{476_981__109_528_} is equal to \lstinline{476981109528}. Negative numeric literals are described grammatically, not lexically.
+A \emph{numeric literal}\index{literal!numeric literal} is either an \emph{integer literal}\index{literal!numeric literal!integer literal} or \emph{floating-point literal}\index{literal!numeric literal!floating-point literal}. Integer literals may be given in decimal (the default), binary (prefixed by \texttt{0b} or \texttt{0B}), octal (prefixed by \texttt{0o} or \texttt{0O}) or hexadecimal (prefixed by \texttt{0x} or \texttt{0X}) notation. Floating-point literals are always decimal. A floating literal must contain digits both before and after the decimal point. A "\texttt{\_}" character is allowed inside numeric literals for visual separation of digit groups, for instance \lstinline{476_981__109_528_} is equal to \lstinline{476981109528}. Regardless of the input method, only the value is stored. This means that after number is printed, no underlines will be displayed on the screen. Negative numeric literals are described grammatically, not lexically.
 
 \subsection{String Literals}
 
@@ -222,7 +222,7 @@ A \emph{regular expression literal}\index{literal!string literal!regular express
 
 A \emph{string literal modifier}\index{literal!string literal!modifier} is a special flag that, when enabled, adds a step of processing of the literal value before compiling it to Intentio term. The order of modifiers is respected, they are processed from left-most modifier to right-most one.
 
-Because modifiers alter literal contents before its compiling, they can fundamentally change their meaning, for instance the literal \lstinline{tc"   x   "} should successfully compile and evaluate to single character "\texttt{x}".
+Because modifiers alter literal contents before its compiling, they can fundamentally change their meaning, for instance the literal \lstinline{tc"   x   "} should successfully compile and evaluate to single character "\texttt{x}", while \lstinline{ct"   x   "} would report an error becouse there is not possible to make character from a multi-letter string.
 
 Intentio provides following modifiers:
 
