@@ -11,12 +11,10 @@ This chapter describes the syntax and informal semantics of Intentio items. An \
 
 \begin{bnf}
   \gd{fundecl} \eq \term{fun} \ \term{\gp{id}} \ \term{(} \ \gtry{\gp{funparams}} \ \term{)} \ \gp{braceblock} \\
-  \gd{funparams} \eq \term{\gp{expr}} \ \gmany{ \ \term{,} \ \term{expr} \ \term{\gp{expr}} \ } \ \gtry{\term{,}}
+  \gd{funparams} \eq \term{\gp{id}} \ \gmany{ \ \term{,} \ \term{\gp{id}} \ } \ \gtry{\term{,}}
 \end{bnf}
 
 A \emph{function}\index{item!function} is a named block, along with optional set of parameters. Functions are declared with the keyword \lstinline{fun}. If keyword \emph{return} is not used, the function returns the result of evaluating the last expression from the contained block. Functions may declare a set of input variables as parameters, through which the caller passes arguments into the function. Input variables behave the same as normal variables defined within a function block.
-
-A keyword \lstinline{expr} before argument means that it would be evaluated. If it fails, the function will not be executed and return fail \emph{none} term.
 
 The number of function parameters $n$ is called the \emph{arity}\index{items!function arity} of the function.
 

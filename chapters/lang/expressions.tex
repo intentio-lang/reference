@@ -60,19 +60,20 @@ Literals in Intentio are always immutable, it is not possible to change the valu
 \section{Block expressions}
 
 \begin{bnf}
-  \gd{blockexpr} \eq \gp{braceblock}  \ \gp{parenblock} \\
+  \gd{blockexpr} \eq \gp{braceblock} \\
   \\
   \gd{braceblock} \eq \term{\{} \ \gtry{\gp{blockbody}} \ \term{\}} \\
-  \gd{parenblock} \eq \term{(} \ \gtry{\gp{blockbody}} \ \term{)} \\
+  % \gd{parenblock} \eq \term{(} \ \gtry{\gp{blockbody}} \ \term{)} \\
   \\
   \gd{blockbody} \eq \gmany{ \ \gp{stmt} \ \term{;} \ } \ \gp{expr} \ \gtry{\term{;}}
 \end{bnf}
 
-A \emph{block expression}\index{expression!block expression} is an optional sequence of statements, followed by an expression. Each block introduces a new namespace scope, this means that variables introduced within a block are in scope for only the block itself.
+A \emph{block expression}\index{expression!block expression} is an optional sequence of statements, followed by an expression. Each block introduces a new namespace scope, this means that variables introduced within a block are in scope for only the block itself. It evaluate statements sequentially, and return result equal to the last expression.
 
-A parenthesized block evaluates statements sequentially while each statement evaluates successfully. On the first failing statement, the block stops evaluation and its result is equal to the result of the failing statement. Otherwise, if all statements succeeded, the block evaluates to result of the last expression. If the block is empty, its result is a succeeded \emph{none} term.
+% A parenthesized block evaluates statements sequentially while each statement evaluates successfully. On the first failing statement, the block stops evaluation and its result is equal to the result of the failing statement. Otherwise, if all statements succeeded, the block evaluates to result of the last expression. If the block is empty, its result is a succeeded \emph{none} term.
 
-A bracked block also evaluates statements sequentially, but it does not stop evaluating statements even if some of them fails. Its result is always equal to the result of the last expression.
+% A bracked block also evaluates statements sequentially, but it does not stop evaluating statements even if some of them fails. Its result is always equal to the result of the last expression.
+
 \section{Operator expressions}\index{expression!operator expression}
 
 \begin{bnf}
@@ -275,10 +276,12 @@ Operators \lstinline{+}, \lstinline{-}, \lstinline{*} and \lstinline{/} may lega
 
 \begin{bnf}
   \gd{callexpr} \eq \gp{expr} \ \term{(} \ \gtry{\gp{callargs}} \ \term{)} \\
-  \gd{callargs} \eq \gp{expr} \ \gmany{ \ \term{,} \ \gp{expr} \ } \ \gtry{\term{,}}
+  \gd{callargs} \eq \gtry{\term{eval}} \ \gp{expr} \ \gmany{ \ \term{,} \ \gtry{\term{eval}} \ \gp{expr} \ } \ \gtry{\term{,}}
 \end{bnf}
 
 A \emph{call expression}\index{expression!call expression} is made of an expression followed by a parenthesized, comma-separated expression list. It invokes a function, providing zero or more arguments, evaluating to result of function invocation (either succeeded return term or failure). If evaluation of any of function arguments fails, then the function is not called, and instead whole expression yields argument failure.
+
+A keyword \lstinline{eval} before argument means that it would be evaluated. If it fails, the function will not be executed and return fail \emph{none} term.
 
 \begin{example}[Trivial call expression]
 \begin{lstlisting}
