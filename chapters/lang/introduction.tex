@@ -60,7 +60,7 @@ fun main() {
 
 \section{Compile-time and Run-time}
 
-Intentio's semantics obey a \emph{phase distinction} between compile-time\index{compile-time} and run-time\index{run-time}\footnote{In interpreter environments, compile-time would consist of syntactic analysis and linting.}. Semantic rules that have a static interpretation govern the success or failure of compilation, while semantic rules that have a dynamic interpretation govern the behavior of the program at run-time.
+Intentio's semantics obey a \emph{phase distinction} between compile-time\index{compile-time} and run-time\index{run-time}\footnote{In interpreter environments, compile-time would consist of syntactic analysis and linting.}. Semantic rules that have a static interpretation govern the success or failure of compilation, while semantic rules that have a dynamic interpretation govern the behaviour of the program at run-time.
 
 
 \section{Program Structure}
@@ -118,7 +118,7 @@ There are no constraints on names belonging to the particular namespace, therefo
   \term{\gd{UTF8BOM}} \eq \term{\textbackslash u\{EFBBBF\}} \gcomm{UTF-8 Byte Order Mark}
 \end{bnf}
 
-An Intentio source file describes a single module, the name of which is defined by source file name. Source files have extension \lstinline{.ieo}. Filename \lstinline{example.int} defines module named \lstinline{example}.
+An Intentio source file describes a single module, the name of which is defined by source file name. Source files have extension \lstinline{.ieo}. File name \lstinline{example.int} defines module named \lstinline{example}.
 
 \begin{bnfutils}
 Intentio source files must always be encoded in UTF8. The optional UTF8 byte order mark (lexical \term{UTF8BOM} production) can only occur at the beginning of the file and must be ignored by the parser.

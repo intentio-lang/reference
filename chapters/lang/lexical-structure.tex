@@ -124,9 +124,9 @@ Additionally:
 
 An \emph{identifier}\index{identifier} consists of a "letter" or underscore followed by zero or more letters, digits, underscores, and single quotes. Simple, unqualified identifiers (\(id\)) are always resolved within current module and scope. In order to be able to specify which module identifier belongs to, in most places identifier may be prefixed with the module name and "\texttt{:}" character to form a \emph{qualified identifier}\index{identifier!qualified identifier} (\(qid\)).
 
-\emph{Keywords}\index{keyword} are identifier-like tokens which have special meaning in the grammar, all of them are excluded from the \(id\) rule. \emph{Operators}\index{operator} are another special tokens, these ones are formed from symbol characters. \(keyword\) and \(operator\) productions have no use in Intentio grammar definition, instead, particular tokens are used.
+\emph{Keywords}\index{keyword} are identifier-like tokens which have special meaning in the grammar, all of them are excluded from the \(id\) rule. \emph{Operators}\index{operator} are another special tokens, these ones are formed from symbol characters. \(keyword\) and \(operator\) productions have no use in Intentio grammar definition instead, particular tokens are used.
 
-Implementations that offer hints or warnings for unused parameters/variables/items are encouraged to suppress such warnings for identifiers beginning with an underscore. This allows programmers to use \texttt{\_arg} for a parameter that they expect to be unused.
+Implementations that offer lints or warnings for unused parameters/variables/items are encouraged to suppress such warnings for identifiers beginning with an underscore. This allows programmers to use \texttt{\_arg} for a parameter that they expect to be unused.
 
 \section{Comments and White space}
 
@@ -161,7 +161,7 @@ A \emph{white space}\index{white space} is a non-empty sequence of white space c
              \gorln \gp{decimal} \ \gp{exponent}
 \end{bnf}
 
-A \emph{numeric literal}\index{literal!numeric literal} is either an \emph{integer literal}\index{literal!numeric literal!integer literal} or \emph{floating-point literal}\index{literal!numeric literal!floating-point literal}. Integer literals may be given in decimal (the default), binary (prefixed by \texttt{0b} or \texttt{0B}), octal (prefixed by \texttt{0o} or \texttt{0O}) or hexadecimal (prefixed by \texttt{0x} or \texttt{0X}) notation. Floating-point literals are always decimal. A floating literal must contain digits both before and after the decimal point. A "\texttt{\_}" character is allowed inside numeric literals for visual separation of digit groups, for instance \lstinline{476_981__109_528_} is equal to \lstinline{476981109528}. Regardless of the input method, only the value is stored. This means that after number is printed, no underlines will be displayed on the screen. Negative numeric literals are described grammatically, not lexically.
+A \emph{numeric literal}\index{literal!numeric literal} is either an \emph{integer literal}\index{literal!numeric literal!integer literal} or \emph{floating-point literal}\index{literal!numeric literal!floating-point literal}. Integer literals may be given in decimal (the default), binary (prefixed by \texttt{0b} or \texttt{0B}), octal (prefixed by \texttt{0o} or \texttt{0O}) or hexadecimal (prefixed by \texttt{0x} or \texttt{0X}) notation. Floating-point literals are always decimal. A floating literal must contain digits both before and after the decimal point. A "\texttt{\_}" character is allowed inside numeric literals for visual separation of digit groups, for instance \lstinline{476_981__109_528_} is equal to \lstinline{476981109528}. Regardless of the input method, only the value is stored. This means that after number is printed, no underlines will be displayed on the screen. Underlines have no semantical meaning and are not persisted in output program. Negative numeric literals are described grammatically, not lexically.
 
 \subsection{String Literals}
 
@@ -223,7 +223,7 @@ A \emph{regular expression literal}\index{literal!string literal!regular express
 
 A \emph{string literal modifier}\index{literal!string literal!modifier} is a special flag that, when enabled, adds a step of processing of the literal value before compiling it to Intentio term. The order of modifiers is respected, they are processed from left-most modifier to right-most one.
 
-Because modifiers alter literal contents before its compiling, they can fundamentally change their meaning, for instance the literal \lstinline{tc"   x   "} should successfully compile and evaluate to single character "\texttt{x}", while \lstinline{ct"   x   "} would report an error because there is not possible to make character from a multi-letter string.
+Because modifiers alter literal contents before its compiling, they can fundamentally change their meaning, for instance the literal \lstinline{tc"   x   "} should successfully compile and evaluate to single character "\texttt{x}", while \lstinline{ct"   x   "} would cause syntax error, as it is not possible to make character from a multi-letter string.
 
 Intentio provides following modifiers:
 
@@ -266,4 +266,4 @@ Some \emph{escape sequences}\index{escape sequence} are available in non-raw str
 
 \subsection{None Literal}
 
-The keyword none evaluates to successful none term, which is a special value none of type none. It is used to make boolean result as succ none or fail none.
+The keyword \lstinline{none} evaluates to none term, which is a special value \emph{none} of type \lstinline{None}. It is used to make boolean result as succ none or fail none.

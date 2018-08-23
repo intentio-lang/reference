@@ -1,6 +1,6 @@
 \chapter{Statements and expressions}
 
-This chapter describes the syntax and semantics of Intentio \emph{expressions}. Intentio is an expression language. This means that all forms of result-producing or effect-causing evaluation fall into uniform syntax category of expressions. Usually, each kind of expression can nest within each other kind of expression, and rules for evaluation of expressions involve specifying both the result produced by the expression and the order in which its sub-expressions are themselves evaluated.
+This chapter describes syntax and semantics of Intentio \emph{expressions}. Intentio is an expression language. This means that all forms of result-producing or effect-causing evaluation fall into uniform syntax category of expressions. Usually, each kind of expression can nest within each other kind of expression, and rules for evaluation of expressions involve specifying both the result produced by the expression and the order in which its sub-expressions are themselves evaluated.
 
 A \emph{statement}\index{statement} is either an assignment or expression. Statements serve mostly to encapsulate and explicitly sequence expression evaluation, forming \emph{blocks}. Evaluating \emph{expression statement}\index{statement!expression statement} means evaluating encapsulated expression.
 
@@ -10,7 +10,7 @@ A \emph{statement}\index{statement} is either an assignment or expression. State
   \\
   \gd{expr} \eq    \gp{idexpr}                      \gcomm{variable or item value expression}
             \gorln \gp{literalexpr}                 \gcomm{literal expression}
-            \gorln \gp{braceblockexpr}              \gcomm{block expression}
+            \gorln \gp{blockexpr}                   \gcomm{block expression}
             \gorln \gp{unopexpr}                    \gcomm{unary operator expression}
             \gorln \gp{binopexpr}                   \gcomm{binary operator expression}
             \gorln \term{(} \ \gp{expr} \ \term{)}  \gcomm{parenthesized expression}
@@ -60,7 +60,7 @@ Literals in Intentio are always immutable, it is not possible to change the valu
 \section{Block expressions}
 
 \begin{bnf}
-  \gd{blockexpr} \eq \gp{braceblock} \\
+  \gd{blockexpr} \eq \gp{braceblock}  \ \gp{parenblock} \\
   \\
   \gd{braceblock} \eq \term{\{} \ \gtry{\gp{blockbody}} \ \term{\}} \\
   \gd{parenblock} \eq \term{(} \ \gtry{\gp{blockbody}} \ \term{)} \\
@@ -72,7 +72,7 @@ A \emph{block expression}\index{expression!block expression} is an optional sequ
 
 A parenthesized block evaluates statements sequentially while each statement evaluates successfully. On the first failing statement, the block stops evaluation and its result is equal to the result of the failing statement. Otherwise, if all statements succeeded, the block evaluates to result of the last expression. If the block is empty, its result is a succeeded \emph{none} term.
 
-A braced block also evaluates statements sequentially, but it does not stop to evaluate statements even if some of them fails. Its result is always equal to the result of the last expression.
+A bracked block also evaluates statements sequentially, but it does not stop evaluating statements even if some of them fails. Its result is always equal to the result of the last expression.
 \section{Operator expressions}\index{expression!operator expression}
 
 \begin{bnf}
@@ -112,7 +112,7 @@ A braced block also evaluates statements sequentially, but it does not stop to e
 
 \subsection{Arithmetic operators}
 
-Arithmetic operators apply to numeric terms (and, rarely, strings). Evaluating arithmetic operations always succeeds, behavior in erroneous situations (such as division by zero) is described below. The following table lists all arithmetic operations, along with essential properties.
+Arithmetic operators apply to numeric terms (and, rarely, strings). Evaluating arithmetic operations always succeeds, behaviour in erroneous situations (such as division by zero) is described below. The following table lists all arithmetic operations, along with essential properties.
 
 \begin{bnfutils}
 \begin{table}[ht]
@@ -195,7 +195,7 @@ Integers are comparable with integers in the usual way. Floating-point numbers a
 
 Characters are compared using their byte representation. Strings and regular expressions are compared character by character. For \lstinline{===} and \lstinline{!==} operators comparisons between characters, strings and regular expressions always fail, otherwise characters and regular expressions are always converted to strings before \lstinline{==} and \lstinline{!=} comparison.
 
-No matter what comparison was made, its result consists of term copied from the second argument.
+No matter what comparison was made, its result term is equal to second argument's term.
 
 \subsection{Result operators}
 
@@ -278,11 +278,11 @@ Operators \lstinline{+}, \lstinline{-}, \lstinline{*} and \lstinline{/} may lega
   \gd{callargs} \eq \gp{expr} \ \gmany{ \ \term{,} \ \gp{expr} \ } \ \gtry{\term{,}}
 \end{bnf}
 
-A \emph{call expression}\index{expression!call expression} is made of an expression followed by a parenthesized, comma-separated expression list. It invokes a function, providing zero or more arguments, evaluating to result of function invocation (either succeeded return term or failure). If the evaluation of any of function arguments fails, then the function is not called, and instead of whole expression yields argument failure.
+A \emph{call expression}\index{expression!call expression} is made of an expression followed by a parenthesized, comma-separated expression list. It invokes a function, providing zero or more arguments, evaluating to result of function invocation (either succeeded return term or failure). If evaluation of any of function arguments fails, then the function is not called, and instead whole expression yields argument failure.
 
 \begin{example}[Trivial call expression]
 \begin{lstlisting}
-let y = add(3, 4)
+y = add(3, 4);
 \end{lstlisting}
 \end{example}
 
@@ -291,7 +291,7 @@ let y = add(3, 4)
 fun f(x) { x * 2; }
 fun g() { f; }
 
-let y = g()(5); # works same as y = f(5)
+y = g()(5); # works same as y = f(5)
 y == 10;
 \end{lstlisting}
 \end{example}
@@ -306,7 +306,7 @@ A \emph{while loop}\index{expression!while loop} begins by evaluating loop condi
 
 \begin{example}[While expression with parentheses]
 \begin{lstlisting}
-  let i = 0;
+  i = 0;
   while (i < 8; i = i + 1) {
     println(i);
   }
@@ -320,11 +320,10 @@ A \emph{while loop}\index{expression!while loop} begins by evaluating loop condi
               & & \gtry{ \ \term{else} \ ( \ \gp{braceblock} \gor \gp{ifexpr} \ ) \ }
 \end{bnf}
 
-A \emph{conditional expression}\index{expression!conditional expression} is a conditional branch in program control. A conditional expression is made of a condition block/expression, followed by a consequent block, any number of alternative conditions and blocks, and an optional trailing final alternative block. If a condition expression evaluates successfully, the consequent block is executed and any subsequent \lstinline{else if} or \lstinline{else} block is skipped. If a condition expression evaluation fails, the consequent block is skipped and any subsequent else if the condition is evaluated. If all condition blocks fail then \lstinline{else} block is executed. Result values of conditions in condition block are ignored. A conditional expression evaluates to the same value as the executed block, or succeeded \emph{none} if no block is evaluated.
+A \emph{conditional expression}\index{expression!conditional expression} is a conditional branch in program control. A conditional expression is made of a condition block/expression, followed by a consequent block, any number of alternative conditions and blocks, and an optional trailing final alternative block. If a condition expression evaluates successfully, the consequent block is executed and any subsequent \lstinline{else if} or \lstinline{else} block is skipped. If a condition expression evaluation fails, the consequent block is skipped and subsequent \lstinline{else if} or \lstinline{else} condition is evaluated. If all condition blocks fail then \lstinline{else} block is executed. Result values of conditions in condition block are ignored. A conditional expression evaluates to the same value as the executed block, or succeeded \emph{none} if no block is evaluated.
 
 \begin{example}[Trivial if expression]
 \begin{lstlisting}
-  let a = 3; let b = 8; let c = 7;
   if a < b { c = a };
 \end{lstlisting}
 \end{example}
@@ -333,8 +332,7 @@ The variables defined in the condition could be used in the if-braceblock and th
 
 \begin{example}[If expression]
   \begin{lstlisting}
-    let a = 3; let b = 8; let c = 7;
-    if (let a = 3; c = b; a < b) { c = a } 
+    if (a = 3; c = b; a < b) { c = a } 
     else { println("c is equal to b which value is " + b) };
   \end{lstlisting}
 \end{example}
@@ -345,7 +343,7 @@ The variables defined in the condition could be used in the if-braceblock and th
   \gd{returnexpr} \eq \term{return} \ \gtry{\gp{expr}}
 \end{bnf}
 
-A \emph{return expression}\index{expression!return expression} terminates execution of enclosing function, making it return the result of evaluating provided expression. In case no expression is given, a \emph{none result} is returned.
+A \emph{return expression}\index{expression!return expression} terminates execution of enclosing function, making it return the result of evaluating provided expression. Just in case no expression is given, a \emph{none result} is returned.
 
 \begin{example}[Return expression]
 \begin{lstlisting}
