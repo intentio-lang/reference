@@ -16,7 +16,7 @@ This chapter describes the syntax and informal semantics of Intentio items. An \
 
 A \emph{function}\index{item!function} is a named block, along with optional set of parameters. Functions are declared with the keyword \lstinline{fun}. If keyword \emph{return} is not used, the function returns the result of evaluating the last expression from the contained block. Functions may declare a set of input variables as parameters, through which the caller passes arguments into the function. Input variables behave the same as normal variables defined within a function block.
 
-A keyword \lstinline{expr} before argument means that it would be evaluated. If it fails, the function will not be executed and return fail unit term.
+A keyword \lstinline{expr} before argument means that it would be evaluated. If it fails, the function will not be executed and return fail \emph{none} term.
 
 The number of function parameters $n$ is called the \emph{arity}\index{items!function arity} of the function.
 

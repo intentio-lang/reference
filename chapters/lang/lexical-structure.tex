@@ -87,14 +87,15 @@ Additionally:
         \gor   \term{in}
         \gor   \term{is}
         \gor   \term{module}
-        \gorln \term{not}
+        \gorln \term{none}
+        \gor   \term{not}
         \gor   \term{or}
         \gor   \term{return}
         \gor   \term{struct}
         \gor   \term{succ}
         \gor   \term{trait}
-        \gor   \term{type}
-        \gorln \term{while}
+        \gorln \term{type}
+        \gor   \term{while}
         \gor   \term{xor}
         \gor   \term{yield}
         \gor   \term{\_} \\
@@ -139,7 +140,7 @@ A \emph{white space}\index{white space} is a non-empty sequence of white space c
 \section{Literals}
 
 \begin{bnf}
-  \gd{literal} \eq \gp{integer} \gor \gp{float} \gor \gp{string}
+  \gd{literal} \eq \gp{integer} \gor \gp{float} \gor \gp{string} \gor \term{none}
 \end{bnf}
 
 \subsection{Numeric Literals}
@@ -262,3 +263,7 @@ Some \emph{escape sequences}\index{escape sequence} are available in non-raw str
     \end{tabular}
     \end{center}
 \end{itemize}
+
+\subsection{None Literal}
+
+The keyword none evaluates to successful none term, which is a special value none of type none. It is used to make boolean result as succ none or fail none.

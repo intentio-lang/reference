@@ -70,7 +70,7 @@ Literals in Intentio are always immutable, it is not possible to change the valu
 
 A \emph{block expression}\index{expression!block expression} is an optional sequence of statements, followed by an expression. Each block introduces a new namespace scope, this means that variables introduced within a block are in scope for only the block itself.
 
-A parenthesized block evaluates statements sequentially while each statement evaluates successfully. On the first failing statement, the block stops evaluation and its result is equal to the result of the failing statement. Otherwise, if all statements succeeded, the block evaluates to result of the last expression. If the block is empty, its result is a succeeded \emph{unit} term.
+A parenthesized block evaluates statements sequentially while each statement evaluates successfully. On the first failing statement, the block stops evaluation and its result is equal to the result of the failing statement. Otherwise, if all statements succeeded, the block evaluates to result of the last expression. If the block is empty, its result is a succeeded \emph{none} term.
 
 A braced block also evaluates statements sequentially, but it does not stop to evaluate statements even if some of them fails. Its result is always equal to the result of the last expression.
 \section{Operator expressions}\index{expression!operator expression}
@@ -302,7 +302,7 @@ y == 10;
   \gd{whileexpr} \eq \term{while} \ ( \ \gp{parenblock} \gor \gp{expr} \ ) \ \gp{braceblock}
 \end{bnf}
 
-A \emph{while loop}\index{expression!while loop} begins by evaluating loop condition block/expression. If evaluating loop condition succeeds, the loop body block executes. If the condition fails, then while loop completes and returns succeeded unit term. The result value of condition block is ignored.
+A \emph{while loop}\index{expression!while loop} begins by evaluating loop condition block/expression. If evaluating loop condition succeeds, the loop body block executes. If the condition fails, then while loop completes and returns succeeded \emph{none} term. The result value of condition block is ignored.
 
 \begin{example}[While expression with parentheses]
 \begin{lstlisting}
@@ -320,7 +320,7 @@ A \emph{while loop}\index{expression!while loop} begins by evaluating loop condi
               & & \gtry{ \ \term{else} \ ( \ \gp{braceblock} \gor \gp{ifexpr} \ ) \ }
 \end{bnf}
 
-A \emph{conditional expression}\index{expression!conditional expression} is a conditional branch in program control. A conditional expression is made of a condition block/expression, followed by a consequent block, any number of alternative conditions and blocks, and an optional trailing final alternative block. If a condition expression evaluates successfully, the consequent block is executed and any subsequent \lstinline{else if} or \lstinline{else} block is skipped. If a condition expression evaluation fails, the consequent block is skipped and any subsequent else if the condition is evaluated. If all condition blocks fail then \lstinline{else} block is executed. Result values of conditions in condition block are ignored. A conditional expression evaluates to the same value as the executed block, or succeeded unit if no block is evaluated.
+A \emph{conditional expression}\index{expression!conditional expression} is a conditional branch in program control. A conditional expression is made of a condition block/expression, followed by a consequent block, any number of alternative conditions and blocks, and an optional trailing final alternative block. If a condition expression evaluates successfully, the consequent block is executed and any subsequent \lstinline{else if} or \lstinline{else} block is skipped. If a condition expression evaluation fails, the consequent block is skipped and any subsequent else if the condition is evaluated. If all condition blocks fail then \lstinline{else} block is executed. Result values of conditions in condition block are ignored. A conditional expression evaluates to the same value as the executed block, or succeeded \emph{none} if no block is evaluated.
 
 \begin{example}[Trivial if expression]
 \begin{lstlisting}
@@ -353,7 +353,7 @@ The variables defined in the condition could be used in the if-braceblock and th
   \gd{returnexpr} \eq \term{return} \ \gtry{\gp{expr}}
 \end{bnf}
 
-A \emph{return expression}\index{expression!return expression} terminates execution of enclosing function, making it return the result of evaluating provided expression. In case no expression is given, a \emph{unit} is returned.
+A \emph{return expression}\index{expression!return expression} terminates execution of enclosing function, making it return the result of evaluating provided expression. In case no expression is given, a \emph{none result} is returned.
 
 \begin{example}[Return expression]
 \begin{lstlisting}
