@@ -68,7 +68,7 @@ Literals in Intentio are always immutable, it is not possible to change the valu
   \gd{blockbody} \eq \gmany{ \ \gp{stmt} \ \term{;} \ } \ \gp{expr} \ \gtry{\term{;}}
 \end{bnf}
 
-A \emph{block expression}\index{expression!block expression} is an optional sequence of statements, followed by an expression. Each block introduces a new namespace scope, this means that variables introduced within a block are in scope for only the block itself. It evaluate statements sequentially, and return result equal to the last expression.
+A \emph{block expression}\index{expression!block expression} is an optional sequence of statements, followed by an expression. Each block introduces a new namespace scope, this means that variables introduced within a block are in scope for only the block itself. Block statements are evaluated sequentially, and the result of last expression evaluated is returned.
 
 % A parenthesized block evaluates statements sequentially while each statement evaluates successfully. On the first failing statement, the block stops evaluation and its result is equal to the result of the failing statement. Otherwise, if all statements succeeded, the block evaluates to result of the last expression. If the block is empty, its result is a succeeded \emph{none} term.
 
@@ -156,7 +156,8 @@ Int + Float -> Float       # == Float(Int) + Float
 Strings can be concatenated using \lstinline{+} operator. Following typing rules hold:
 
 \begin{lstlisting}
-Char + Char -> String      # concatenate two Chars making a String
+Char + Char -> String      # concatenate two Chars
+                           # making a String
 String + String -> String  # concatenate two Strings
 Char + String -> String    # prepend Char to String
 String + Char -> String    # append Char to String
@@ -204,59 +205,53 @@ Result operators are used to making logical expressions, such as conjunction, al
 
 The following tables present the exact results for each set of function arguments. The descriptions in the left column correspond to the first argument, while those in the top column - to the second. The results term is copied from the second argument.
 
-\begin{bnfutils}
-  \begin{table}[ht]
-    \caption{\emph{and}}
-    \begin{center}
-    \begin{tabular}[t]{l|l|l}
-       & Succ Term2 & Fail Term2 \\
-      \hline
-      Succ Term1 & Succ Term2 & Fail Term2 \\
-      Fail Term1 & Fail Term2 & Fail Term2 
-    \end{tabular}
-    \end{center}
-  \end{table}
-\end{bnfutils}
+\begin{table}[!h]
+\caption{Truth tables for result expressions}
 
-\begin{bnfutils}
-  \begin{table}[ht]
-    \caption{\emph{or}}
-    \begin{center}
-    \begin{tabular}[t]{l|l|l}
-        & Succ Term2 & Fail Term2 \\
-      \hline
-      Succ Term1 & Succ Term2 & Succ Term2 \\
-      Fail Term1 & Succ Term2 & Fail Term2 
-    \end{tabular}
-    \end{center}
-  \end{table}
-\end{bnfutils}
+\begin{subtable}{.5\linewidth}
+  \centering
+  \caption{\lstinline$a and b$}
+  \begin{tabular}{r|rr}
+      & \lstinline$succ a$ & \lstinline$fail a$ \\
+    \hline
+    \lstinline$succ b$ & \lstinline$succ b$ & \lstinline$fail b$ \\
+    \lstinline$fail b$ & \lstinline$fail b$ & \lstinline$fail b$
+  \end{tabular}
+\end{subtable}%
+\begin{subtable}{.5\linewidth}
+  \centering
+  \caption{\lstinline$a or b$}
+  \begin{tabular}{r|rr}
+      & \lstinline$succ a$ & \lstinline$fail a$ \\
+    \hline
+    \lstinline$succ b$ & \lstinline$succ b$ & \lstinline$succ b$ \\
+    \lstinline$fail b$ & \lstinline$succ b$ & \lstinline$fail b$
+  \end{tabular}
+\end{subtable}
 
-\begin{bnfutils}
-  \begin{table}[ht]
-    \caption{\emph{xor}}
-    \begin{center}
-    \begin{tabular}[t]{l|l|l}
-        & Succ Term2 & Fail Term2 \\
-      \hline
-      Succ Term1 & Fail Term2 & Succ Term2 \\
-      Fail Term1 & Succ Term2 & Fail Term2 
-    \end{tabular}
-    \end{center}
-  \end{table}
-\end{bnfutils}
+\begin{subtable}{.5\linewidth}
+  \centering
+  \caption{\lstinline$a xor b$}
+  \begin{tabular}{r|rr}
+      & \lstinline$succ a$ & \lstinline$fail a$ \\
+    \hline
+    \lstinline$succ b$ & \lstinline$fail b$ & \lstinline$succ b$ \\
+    \lstinline$fail b$ & \lstinline$succ b$ & \lstinline$fail b$
+  \end{tabular}
+\end{subtable}%
+\begin{subtable}{.5\linewidth}
+  \centering
+  \caption{\lstinline$not a$}
+  \begin{tabular}{r|r}
+    \lstinline$a$ & \lstinline$not a$ \\
+    \hline
+    \lstinline$succ a$ & \lstinline$fail a$ \\
+    \lstinline$fail a$ & \lstinline$succ a$
+  \end{tabular}
+\end{subtable}
+\end{table}
 
-\begin{bnfutils}
-  \begin{table}[!htbp]
-    \caption{\emph{not}}
-    \begin{center}
-    \begin{tabular}[t]{l|l}
-      Succ Term & Succ Term \\
-      Fail Term & Fail Term 
-    \end{tabular}
-    \end{center}
-  \end{table}
-\end{bnfutils}
+\clearpage
 
 \subsection{Typing errors}
 
@@ -309,10 +304,10 @@ A \emph{while loop}\index{expression!while loop} begins by evaluating loop condi
 
 \begin{example}[While expression with parentheses]
 \begin{lstlisting}
-  i = 0;
-  while (i < 8; i = i + 1) {
-    println(i);
-  }
+i = 0;
+while (i < 8; i = i + 1) {
+  println(i);
+}
 \end{lstlisting}
 \end{example}
 
@@ -327,17 +322,20 @@ A \emph{conditional expression}\index{expression!conditional expression} is a co
 
 \begin{example}[Trivial if expression]
 \begin{lstlisting}
-  if a < b { c = a };
+if a < b { c = a };
 \end{lstlisting}
 \end{example}
 
 The variables defined in the condition could be used in the if-braceblock and the else-braceblock as it was the same scope.
 
 \begin{example}[If expression]
-  \begin{lstlisting}
-    if (a = 3; c = b; a < b) { c = a } 
-    else { println("c is equal to b which value is " + b) };
-  \end{lstlisting}
+\begin{lstlisting}
+if (a = 3; c = b; a < b) {
+  c = a;
+} else {
+  println("c is equal to b which value is " + str(b));
+};
+\end{lstlisting}
 \end{example}
 
 \section{Return expressions}
