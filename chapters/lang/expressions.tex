@@ -190,7 +190,7 @@ Comparison operators compare two operands and yield either success if comparison
 In Intentio, arguments of comparison operators can be of any type. The following total ordering among types is defined:
 
 \begin{lstlisting}
-Number (Int or Float) < Char < String < Regex
+None < Number (Int or Float) < Char < String < Regex
 \end{lstlisting}
 
 Integers are comparable with integers in the usual way. Floating-point numbers are comparable with floating-point numbers according to IEEE-754\cite{IEEE754} rules. For \lstinline{===} and \lstinline{!==} operators comparing integer to floating-point number (and vice-versa) always fails, otherwise integer is converted to float before comparison.
