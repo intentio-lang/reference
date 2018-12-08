@@ -15,7 +15,7 @@ An Intentio \emph{library}\index{library} is an assembly containing reusable mod
 Modules are entirely determined at compile-time, remain fixed during execution, and may reside in read-only memory. This limitation does not apply to assemblies (including single module assemblies). It is possible to provide mechanisms to dynamically compile, link, load and unload assemblies at run-time.
 
 \begin{example}[Simple Module]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 # File: simple_module.ieo
 
 export (compute, hello)
@@ -42,7 +42,7 @@ fun hello() {
 An \emph{export declaration}\index{module!export declaration} is a list of names of all items that are exported by this module. A module may \emph{re-export} items imported from other modules.
 
 \begin{example}[Re-exporting]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 # File: myprelude.ieo
 
 export (open, writeln, sin, pi)

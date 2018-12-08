@@ -136,7 +136,7 @@ Arithmetic operators apply to numeric terms (and, rarely, strings). Evaluating a
 
 For integer and floating-point operand terms, the \lstinline{-x} operator is defined as follows. Term type is not changed during evaluation.
 
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 -x === 0 - x
 \end{lstlisting}
 
@@ -144,7 +144,7 @@ For integer and floating-point operand terms, the \lstinline{-x} operator is def
 
 For \lstinline{+}, \lstinline{-}, \lstinline{*} and \lstinline{/} operators, following typing rules hold:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 Int + Int -> Int
 Float + Float -> Float
 Float + Int -> Float       # == Float + Float(Int)
@@ -155,7 +155,7 @@ Int + Float -> Float       # == Float(Int) + Float
 
 Strings can be concatenated using \lstinline{+} operator. Following typing rules hold:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 Char + Char -> String      # concatenate two Chars
                            # making a String
 String + String -> String  # concatenate two Strings
@@ -189,9 +189,9 @@ Comparison operators compare two operands and yield either success if comparison
 
 In Intentio, arguments of comparison operators can be of any type. The following total ordering among types is defined:
 
-\begin{lstlisting}
-None < Number (Int or Float) < Char < String < Regex
-\end{lstlisting}
+\[
+None < Number \ (Int \ or \ Float) < Char < String < Regex
+\]
 
 Integers are comparable with integers in the usual way. Floating-point numbers are comparable with floating-point numbers according to IEEE-754\cite{IEEE754} rules. For \lstinline{===} and \lstinline{!==} operators comparing integer to floating-point number (and vice-versa) always fails, otherwise integer is converted to float before comparison.
 
@@ -279,13 +279,13 @@ A \emph{call expression}\index{expression!call expression} is made of an express
 A keyword \lstinline{eval} before argument means that it would be evaluated. If it fails, the function will not be executed and return fail \emph{none} term.
 
 \begin{example}[Trivial call expression]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 y = add(3, 4);
 \end{lstlisting}
 \end{example}
 
 \begin{example}[Calling arbitrary expressions]
-\begin{lstlisting}[mathescape=true]
+\begin{lstlisting}[language=intentio,mathescape=true]
 fun f(x) { x * 2; }
 fun g() { f; }
 
@@ -303,7 +303,7 @@ y == 10;
 A \emph{while loop}\index{expression!while loop} begins by evaluating loop condition block/expression. If evaluating loop condition succeeds, the loop body block executes. If the condition fails, then while loop completes and returns succeeded \emph{none} term. The result value of condition block is ignored.
 
 \begin{example}[While expression with parentheses]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 i = 0;
 while (i < 8; i = i + 1) {
   println(i);
@@ -321,7 +321,7 @@ while (i < 8; i = i + 1) {
 A \emph{conditional expression}\index{expression!conditional expression} is a conditional branch in program control. A conditional expression is made of a condition block/expression, followed by a consequent block, any number of alternative conditions and blocks, and an optional trailing final alternative block. If a condition expression evaluates successfully, the consequent block is executed and any subsequent \lstinline{else if} or \lstinline{else} block is skipped. If a condition expression evaluation fails, the consequent block is skipped and subsequent \lstinline{else if} or \lstinline{else} condition is evaluated. If all condition blocks fail then \lstinline{else} block is executed. Result values of conditions in condition block are ignored. A conditional expression evaluates to the same value as the executed block, or succeeded \emph{none} if no block is evaluated.
 
 \begin{example}[Trivial if expression]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 if a < b { c = a };
 \end{lstlisting}
 \end{example}
@@ -329,7 +329,7 @@ if a < b { c = a };
 The variables defined in the condition could be used in the if-braceblock and the else-braceblock as it was the same scope.
 
 \begin{example}[If expression]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 if (a = 3; c = b; a < b) {
   c = a;
 } else {
@@ -347,7 +347,7 @@ if (a = 3; c = b; a < b) {
 A \emph{return expression}\index{expression!return expression} terminates execution of enclosing function, making it return the result of evaluating provided expression. Just in case no expression is given, a \emph{none result} is returned.
 
 \begin{example}[Return expression]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 fun abs(a) {
   if a < 0 {
     return -a;

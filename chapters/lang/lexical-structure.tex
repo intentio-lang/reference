@@ -201,7 +201,7 @@ A \emph{character literal}\index{literal!string literal!character literal} is a 
 A \emph{raw string literal}\index{literal!string literal!raw string literal} does not process any escape sequences. It starts with letter \texttt{r}, followed by zero or more repetitions of hash symbol (\texttt{\#}) and double quote (\texttt{"}). The raw string body can contain any sequence of Unicode characters and is terminated only by another double quote (\texttt{"}) followed by the same number of hashes (\texttt{\#}) that proceeded the opening quote.
 
 \begin{example}[Raw string literals]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 "foo"      == r"foo"            # foo
 "\"foo\""  == r#""foo""#        # "foo"
 "x #\"# y" == r##"x #"# y"##    # x #"# y
