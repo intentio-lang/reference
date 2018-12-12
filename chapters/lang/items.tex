@@ -19,7 +19,7 @@ A \emph{function}\index{item!function} is a named block, along with optional set
 The number of function parameters $n$ is called the \emph{arity}\index{items!function arity} of the function.
 
 \begin{example}[Simple function]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 fun the_hardest_calculation(x) {
   x * 2;
 }
@@ -63,7 +63,7 @@ Import declarations support five forms:
 An import declaration declares a dependency relation between the importing and imported module. Modules may be mutually recursive, though module must not import itself, directly or indirectly.
 
 \begin{example}[Import declarations]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 import io
 import math:sin
 import math as m

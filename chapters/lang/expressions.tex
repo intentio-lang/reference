@@ -63,12 +63,12 @@ Literals in Intentio are always immutable, it is not possible to change the valu
   \gd{blockexpr} \eq \gp{braceblock} \\
   \\
   \gd{braceblock} \eq \term{\{} \ \gtry{\gp{blockbody}} \ \term{\}} \\
-  % \gd{parenblock} \eq \term{(} \ \gtry{\gp{blockbody}} \ \term{)} \\
+  \gd{parenblock} \eq \term{(} \ \gtry{\gp{blockbody}} \ \term{)} \\
   \\
   \gd{blockbody} \eq \gmany{ \ \gp{stmt} \ \term{;} \ } \ \gp{expr} \ \gtry{\term{;}}
 \end{bnf}
 
-A \emph{block expression}\index{expression!block expression} is an optional sequence of statements, followed by an expression. Each block introduces a new namespace scope, this means that variables introduced within a block are in scope for only the block itself. It evaluate statements sequentially, and return result equal to the last expression.
+A \emph{block expression}\index{expression!block expression} is an optional sequence of statements, followed by an expression. Each block introduces a new namespace scope, this means that variables introduced within a block are in scope for only the block itself. Block statements are evaluated sequentially, and the result of last expression evaluated is returned.
 
 % A parenthesized block evaluates statements sequentially while each statement evaluates successfully. On the first failing statement, the block stops evaluation and its result is equal to the result of the failing statement. Otherwise, if all statements succeeded, the block evaluates to result of the last expression. If the block is empty, its result is a succeeded \emph{none} term.
 
@@ -136,7 +136,7 @@ Arithmetic operators apply to numeric terms (and, rarely, strings). Evaluating a
 
 For integer and floating-point operand terms, the \lstinline{-x} operator is defined as follows. Term type is not changed during evaluation.
 
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 -x === 0 - x
 \end{lstlisting}
 
@@ -144,7 +144,7 @@ For integer and floating-point operand terms, the \lstinline{-x} operator is def
 
 For \lstinline{+}, \lstinline{-}, \lstinline{*} and \lstinline{/} operators, following typing rules hold:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 Int + Int -> Int
 Float + Float -> Float
 Float + Int -> Float       # == Float + Float(Int)
@@ -155,8 +155,9 @@ Int + Float -> Float       # == Float(Int) + Float
 
 Strings can be concatenated using \lstinline{+} operator. Following typing rules hold:
 
-\begin{lstlisting}
-Char + Char -> String      # concatenate two Chars making a String
+\begin{lstlisting}[language=intentio]
+Char + Char -> String      # concatenate two Chars
+                           # making a String
 String + String -> String  # concatenate two Strings
 Char + String -> String    # prepend Char to String
 String + Char -> String    # append Char to String
@@ -188,9 +189,9 @@ Comparison operators compare two operands and yield either success if comparison
 
 In Intentio, arguments of comparison operators can be of any type. The following total ordering among types is defined:
 
-\begin{lstlisting}
-Number (Int or Float) < Char < String < Regex
-\end{lstlisting}
+\[
+None < Number \ (Int \ or \ Float) < Char < String < Regex
+\]
 
 Integers are comparable with integers in the usual way. Floating-point numbers are comparable with floating-point numbers according to IEEE-754\cite{IEEE754} rules. For \lstinline{===} and \lstinline{!==} operators comparing integer to floating-point number (and vice-versa) always fails, otherwise integer is converted to float before comparison.
 
@@ -204,59 +205,53 @@ Result operators are used to making logical expressions, such as conjunction, al
 
 The following tables present the exact results for each set of function arguments. The descriptions in the left column correspond to the first argument, while those in the top column - to the second. The results term is copied from the second argument.
 
-\begin{bnfutils}
-  \begin{table}[ht]
-    \caption{\emph{and}}
-    \begin{center}
-    \begin{tabular}[t]{l|l|l}
-       & Succ Term2 & Fail Term2 \\
-      \hline
-      Succ Term1 & Succ Term2 & Fail Term2 \\
-      Fail Term1 & Fail Term2 & Fail Term2 
-    \end{tabular}
-    \end{center}
-  \end{table}
-\end{bnfutils}
+\begin{table}[!h]
+\caption{Truth tables for result expressions}
 
-\begin{bnfutils}
-  \begin{table}[ht]
-    \caption{\emph{or}}
-    \begin{center}
-    \begin{tabular}[t]{l|l|l}
-        & Succ Term2 & Fail Term2 \\
-      \hline
-      Succ Term1 & Succ Term2 & Succ Term2 \\
-      Fail Term1 & Succ Term2 & Fail Term2 
-    \end{tabular}
-    \end{center}
-  \end{table}
-\end{bnfutils}
+\begin{subtable}{.5\linewidth}
+  \centering
+  \caption{\lstinline$a and b$}
+  \begin{tabular}{r|rr}
+      & \lstinline$succ a$ & \lstinline$fail a$ \\
+    \hline
+    \lstinline$succ b$ & \lstinline$succ b$ & \lstinline$fail b$ \\
+    \lstinline$fail b$ & \lstinline$fail b$ & \lstinline$fail b$
+  \end{tabular}
+\end{subtable}%
+\begin{subtable}{.5\linewidth}
+  \centering
+  \caption{\lstinline$a or b$}
+  \begin{tabular}{r|rr}
+      & \lstinline$succ a$ & \lstinline$fail a$ \\
+    \hline
+    \lstinline$succ b$ & \lstinline$succ b$ & \lstinline$succ b$ \\
+    \lstinline$fail b$ & \lstinline$succ b$ & \lstinline$fail b$
+  \end{tabular}
+\end{subtable}
 
-\begin{bnfutils}
-  \begin{table}[ht]
-    \caption{\emph{xor}}
-    \begin{center}
-    \begin{tabular}[t]{l|l|l}
-        & Succ Term2 & Fail Term2 \\
-      \hline
-      Succ Term1 & Fail Term2 & Succ Term2 \\
-      Fail Term1 & Succ Term2 & Fail Term2 
-    \end{tabular}
-    \end{center}
-  \end{table}
-\end{bnfutils}
+\begin{subtable}{.5\linewidth}
+  \centering
+  \caption{\lstinline$a xor b$}
+  \begin{tabular}{r|rr}
+      & \lstinline$succ a$ & \lstinline$fail a$ \\
+    \hline
+    \lstinline$succ b$ & \lstinline$fail b$ & \lstinline$succ b$ \\
+    \lstinline$fail b$ & \lstinline$succ b$ & \lstinline$fail b$
+  \end{tabular}
+\end{subtable}%
+\begin{subtable}{.5\linewidth}
+  \centering
+  \caption{\lstinline$not a$}
+  \begin{tabular}{r|r}
+    \lstinline$a$ & \lstinline$not a$ \\
+    \hline
+    \lstinline$succ a$ & \lstinline$fail a$ \\
+    \lstinline$fail a$ & \lstinline$succ a$
+  \end{tabular}
+\end{subtable}
+\end{table}
 
-\begin{bnfutils}
-  \begin{table}[!htbp]
-    \caption{\emph{not}}
-    \begin{center}
-    \begin{tabular}[t]{l|l}
-      Succ Term & Succ Term \\
-      Fail Term & Fail Term 
-    \end{tabular}
-    \end{center}
-  \end{table}
-\end{bnfutils}
+\clearpage
 
 \subsection{Typing errors}
 
@@ -284,13 +279,13 @@ A \emph{call expression}\index{expression!call expression} is made of an express
 A keyword \lstinline{eval} before argument means that it would be evaluated. If it fails, the function will not be executed and return fail \emph{none} term.
 
 \begin{example}[Trivial call expression]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 y = add(3, 4);
 \end{lstlisting}
 \end{example}
 
 \begin{example}[Calling arbitrary expressions]
-\begin{lstlisting}[mathescape=true]
+\begin{lstlisting}[language=intentio,mathescape=true]
 fun f(x) { x * 2; }
 fun g() { f; }
 
@@ -316,11 +311,11 @@ Calling extern functions behave identically as calling normal Intentio functions
 A \emph{while loop}\index{expression!while loop} begins by evaluating loop condition block/expression. If evaluating loop condition succeeds, the loop body block executes. If the condition fails, then while loop completes and returns succeeded \emph{none} term. The result value of condition block is ignored.
 
 \begin{example}[While expression with parentheses]
-\begin{lstlisting}
-  i = 0;
-  while (i < 8; i = i + 1) {
-    println(i);
-  }
+\begin{lstlisting}[language=intentio]
+i = 0;
+while (i < 8; i = i + 1) {
+  println(i);
+}
 \end{lstlisting}
 \end{example}
 
@@ -334,18 +329,21 @@ A \emph{while loop}\index{expression!while loop} begins by evaluating loop condi
 A \emph{conditional expression}\index{expression!conditional expression} is a conditional branch in program control. A conditional expression is made of a condition block/expression, followed by a consequent block, any number of alternative conditions and blocks, and an optional trailing final alternative block. If a condition expression evaluates successfully, the consequent block is executed and any subsequent \lstinline{else if} or \lstinline{else} block is skipped. If a condition expression evaluation fails, the consequent block is skipped and subsequent \lstinline{else if} or \lstinline{else} condition is evaluated. If all condition blocks fail then \lstinline{else} block is executed. Result values of conditions in condition block are ignored. A conditional expression evaluates to the same value as the executed block, or succeeded \emph{none} if no block is evaluated.
 
 \begin{example}[Trivial if expression]
-\begin{lstlisting}
-  if a < b { c = a };
+\begin{lstlisting}[language=intentio]
+if a < b { c = a };
 \end{lstlisting}
 \end{example}
 
 The variables defined in the condition could be used in the if-braceblock and the else-braceblock as it was the same scope.
 
 \begin{example}[If expression]
-  \begin{lstlisting}
-    if (a = 3; c = b; a < b) { c = a } 
-    else { println("c is equal to b which value is " + b) };
-  \end{lstlisting}
+\begin{lstlisting}[language=intentio]
+if (a = 3; c = b; a < b) {
+  c = a;
+} else {
+  println("c is equal to b which value is " + str(b));
+};
+\end{lstlisting}
 \end{example}
 
 \section{Return expressions}
@@ -357,7 +355,7 @@ The variables defined in the condition could be used in the if-braceblock and th
 A \emph{return expression}\index{expression!return expression} terminates execution of enclosing function, making it return the result of evaluating provided expression. Just in case no expression is given, a \emph{none result} is returned.
 
 \begin{example}[Return expression]
-\begin{lstlisting}
+\begin{lstlisting}[language=intentio]
 fun abs(a) {
   if a < 0 {
     return -a;
