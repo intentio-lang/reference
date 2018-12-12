@@ -1,6 +1,6 @@
 \chapter{Introduction}
 
-Intentio is domain specific, imperative programming language oriented for processing textual data. Intentio provides goal-oriented execution, generators, strong dynamic typing with optional type annotations, and a set of primitive data types, including Unicode strings, fixed precision integers, and floating-point numbers. Intentio tries to incorporate ideas of the Icon\cite{TheIconProgrammingLanguage} programming language into modern programming patterns.
+Intentio is domain specific, imperative programming language oriented for processing textual data. Intentio provides goal-oriented execution, strong dynamic typing with optional type annotations, and a set of primitive data types, including Unicode strings, fixed precision integers, and floating-point numbers. Intentio tries to incorporate ideas of the Icon\cite{TheIconProgrammingLanguage} programming language into modern programming patterns.
 
 % TODO: "rich set of types": arbitrary precision integers, lists, maps, sets
 
@@ -38,7 +38,7 @@ Following conventions are used for presenting productions syntax:
 
 \subsubsection*{Parametrized productions}
 
-Some productions in Intentio's grammar (like raw string literals) cannot be expressed using context-free grammar with finite number of productions. In order to reduce need of falling back to natural language, a concept of \emph{parametrized productions} is used throughout this document.
+Some productions in Intentio's grammar (like raw string literals) cannot be expressed using context-free grammar with a finite number of productions. In order to reduce the need of falling back to natural language, a concept of \emph{parametrized productions} is used throughout this document.
 
 A production \(A(x_1, x_2, ..., x_n) \rightarrow B\), parametrized over arguments \(x_1, x_2, ..., x_n\), defines different production for each combination of its arguments.
 
@@ -53,7 +53,7 @@ Examples of Intentio program fragments are given in fixed-width font:
 \begin{lstlisting}
 fun main() {
   x = 4; y = 3;
-  println("sum = " + (x + y));
+  println("sum = " + str(x + y));
 }
 \end{lstlisting}
 
@@ -68,11 +68,11 @@ Intentio's semantics obey a \emph{phase distinction} between compile-time\index{
 An Intentio program is structured syntactically and semantically into five abstract levels:
 
 \begin{enumerate}
-  \item At the topmost of each Intentio program or library is an \emph{assembly}. In compiled environments assembly is an unit of compilation, while in interpreted environments assembly is a whole set of loaded modules.
-  \item At the topmost of each assembly is a set of \emph{modules}. Modules provide a way to control namespaces and to re-use software in larger programs. A particular source code file of Intentio program consists of one module. Module structure is flat, there is no concept of submodule.
-  \item The top level of each module is a set of \emph{item declarations}. An item is a component of module, such as a function, type definition or constant variable.
+  \item At the topmost of each Intentio program or library is an \emph{assembly}. In compiled environments assembly is a unit of compilation, while in interpreted environments assembly is a whole set of loaded modules.
+  \item At the topmost of each assembly is a set of \emph{modules}. Modules provide a way to control namespaces and to re-use software in larger programs. A particular source code file of Intentio program consists of one module. Module structure is flat, there is no concept of the submodule.
+  \item The top level of each module is a set of \emph{item declarations}. An item is a component of the module, such as a function, type definition or constant variable.
   \item Items which contain the real, executable code are built of \emph{statements} and \emph{expressions}. Statements express sequential, side-effect-full actions to carry out. Expression denotes how to evaluate a \emph{term} and evaluating expression returns a \emph{result}.
-  \item At the bottom level is Intentio's \emph{lexical structure}. It describes how to build tokens - the most basic blocks of program's source code from sequences of characters in source file.
+  \item At the bottom level is Intentio's \emph{lexical structure}. It describes how to build tokens - the most basic blocks of program's source code from sequences of characters in the source file.
 \end{enumerate}
 
 
@@ -107,7 +107,7 @@ There are three distinct namespaces in Intentio:
   \item [Type namespace\index{namespace!type namespace}] Consists of type names.
 \end{description}
 
-There are no constraints on names belonging to particular namespace, therefore it is possible for name \texttt{Int} to simultaneously denote an item/variable, module and type.
+There are no constraints on names belonging to the particular namespace, therefore it is possible for name \texttt{Int} to simultaneously denote an item/variable, module and type.
 
 \section{Intentio source file}
 
@@ -118,7 +118,7 @@ There are no constraints on names belonging to particular namespace, therefore i
   \term{\gd{UTF8BOM}} \eq \term{\textbackslash u\{EFBBBF\}} \gcomm{UTF-8 Byte Order Mark}
 \end{bnf}
 
-An Intentio source file describes single module, the name of which is defined by source file name. Source files have extension \lstinline{.int}. File name \lstinline{example.int} defines module named \lstinline{example}.
+An Intentio source file describes a single module, the name of which is defined by source file name. Source files have extension \lstinline{.ieo}. File name \lstinline{example.ieo} defines module named \lstinline{example}.
 
 \begin{bnfutils}
 Intentio source files must always be encoded in UTF8. The optional UTF8 byte order mark (lexical \term{UTF8BOM} production) can only occur at the beginning of the file and must be ignored by the parser.
