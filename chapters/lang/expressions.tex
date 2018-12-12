@@ -299,6 +299,14 @@ y == 10;
 \end{lstlisting}
 \end{example}
 
+\section{Extern keyword}
+
+\begin{bnf}
+  \term{extern} \ \term{"intentioc"} \ \term{fun} \ \gp{id} \ \term{(} \ \gtry{\gp{callargs}} \ \term{)}
+\end{bnf}
+
+Calling extern functions behave identically as calling normal Intentio functions, but they are only declared in output C code, expecting definitions to be present elsewhere.
+
 \section{Loops}
 
 \begin{bnf}
