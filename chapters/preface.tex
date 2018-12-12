@@ -5,14 +5,14 @@ We live in times of rapid emerging of new, modern programming languages. Some of
 Despite all these changes, not all ideas get a chance to shine. Some of them are becoming forgotten and treated as esoteric. One of these is goal-oriented evaluation, with Icon\cite{TheIconProgrammingLanguage} being one of its most \emph{iconic} implementers. Authors of this document believe that Icon exposes some very interesting ideas and they made an attempt to recreate them in a new programming language: \emph{Intentio}, named after Latin for \emph{intention}.
 
 This document is the primary reference for the Intentio programming language. It \emph{semi-formally}\footnote{This document tries to maintain reasonably formal description of all items, but there are no guarantees all cases are described. As a fallback, the \emph{intentioc}\cite{intentioc} compiler can be used as secondary reference.} describes each language construct and its use.
-
+ 
 This document does not serve as a beginner-friendly introduction to the language.
 
 \section*{Goals}
 
 The primary goals when designing Intentio was for language to satisfy following constraints:
 \begin{enumerate}
-  \item It should feature core concepts of Icon language: goal-oriented evaluation and generators
+  \item It should feature core concept of Icon language: goal-oriented evaluation
   \item It should support Unicode character set
   \item It should be fast and easy to build prototype applications, the language should be \emph{ergonomic}\footnote{Source code of Intentio programs should be concise, pleasant to write and easy to reason about.} from developer perspective \textbf{and} \emph{IDE friendly}\footnote{Source code of Intentio programs should be easily processable by text editors and analysis tools.}
   \item It should feature rich capabilities in processing textual data

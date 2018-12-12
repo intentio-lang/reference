@@ -72,21 +72,26 @@ Additionally:
   \gd{qid} \eq \gp{id} \ \term{:} \ \gp{id} \\
   \\
   \gd{keyword} \eq
-               \term{and}
+               \term{abstract}
+        \gor   \term{and}
         \gor   \term{break}
+        \gor   \term{case}
         \gor   \term{const}
-        \gor   \term{do}
+        \gor   \term{continue}
+        \gorln \term{do}
         \gor   \term{else}
         \gor   \term{enum}
         \gor   \term{eval}
-        \gorln \term{export}
+        \gor   \term{export}
         \gor   \term{fail}
         \gor   \term{fun}
-        \gor   \term{if}
+        \gorln \term{if}
         \gor   \term{impl}
         \gor   \term{import}
         \gor   \term{in}
         \gor   \term{is}
+        \gor   \term{let}
+        \gor   \term{loop}
         \gorln \term{module}
         \gor   \term{none}
         \gor   \term{not}
@@ -112,8 +117,11 @@ Additionally:
          \gor   \term{]}
          \gor   \term{\{}
          \gor   \term{\}}
+         \gor   \term{,}
+         \gor   \term{:}
          \gor   \term{;}
          \gorln \term{==}
+         \gor   \term{!=}
          \gor   \term{<}
          \gor   \term{<=}
          \gor   \term{>}
@@ -121,6 +129,7 @@ Additionally:
          \gor   \term{===}
          \gor   \term{!==}
          \gorln \term{=}
+         \gor   \term{<-}
 \end{bnf}
 
 An \emph{identifier}\index{identifier} consists of a "letter" or underscore followed by zero or more letters, digits, underscores, and single quotes. Simple, unqualified identifiers (\(id\)) are always resolved within current module and scope. In order to be able to specify which module identifier belongs to, in most places identifier may be prefixed with the module name and "\texttt{:}" character to form a \emph{qualified identifier}\index{identifier!qualified identifier} (\(qid\)).
@@ -167,10 +176,10 @@ A \emph{numeric literal}\index{literal!numeric literal} is either an \emph{integ
 \subsection{String Literals}
 
 \begin{bnf}
-  \gd{string} \eq \gtry{\gp{stringmod}} \ ( \ \gp{string'} \gor \gp{charstring} \gor \gp{rawstring} \gor \gp{regexstring} \ )
+  \gd{string} \eq \gtry{\gp{stringmod}} \ ( \ \gp{string'} \gor \gp{rawstring} \gor \gp{regexstring} \ )
 \end{bnf}
 
-Intentio features very flexible string literals syntax. String literals can be written in four forms (regular, character, raw and regular expression) that make the literal compile to one of three value types (\lstinline{String}, \lstinline{Char} or \lstinline{Regex}). String literals can be also prefixed with few modifiers that alter literal value before compiling it to value.
+Intentio features very flexible string literals syntax. String literals can be written in three forms (regular, raw and regular expression) that make the literal compile to one of two value types (\lstinline{String} or \lstinline{Regex}). String literals can be also prefixed with few modifiers that alter literal value before compiling it to value.
 
 \subsubsection*{Regular String Literals}
 
@@ -179,14 +188,6 @@ Intentio features very flexible string literals syntax. String literals can be w
 \end{bnf}
 
 A \emph{string literal}\index{literal!string literal} is a sequence of Unicode characters, typed either directly or via escape sequence. String literals are compiled to \lstinline{String} terms.
-
-\subsubsection*{Character Literals}
-
-\begin{bnf}
-  \gd{charstring} \eq \term{c"} \ ( \ \gdiff{\gp{any}}{(\term{"} \gor \term{\textbackslash})} \gor \gp{escseq} \ ) \ \term{"}
-\end{bnf}
-
-A \emph{character literal}\index{literal!string literal!character literal} is a single Unicode character string, typed either directly or via escape sequence. Character literals are compiled to \lstinline{Char} terms. The implementation is required to verify that character literal makes only one character.
 
 \subsubsection*{Raw String Literals}
 
@@ -223,8 +224,6 @@ A \emph{regular expression literal}\index{literal!string literal!regular express
 \end{bnf}
 
 A \emph{string literal modifier}\index{literal!string literal!modifier} is a special flag that, when enabled, adds a step of processing of the literal value before compiling it to Intentio term. The order of modifiers is respected, they are processed from left-most modifier to right-most one.
-
-Because modifiers alter literal contents before its compiling, they can fundamentally change their meaning, for instance the literal \lstinline{tc"   x   "} should successfully compile and evaluate to single character "\texttt{x}", while \lstinline{ct"   x   "} would cause syntax error, as it is not possible to make character from a multi-letter string.
 
 Intentio provides following modifiers:
 
